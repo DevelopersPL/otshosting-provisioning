@@ -1,0 +1,18 @@
+---
+- name: Download latest TFS from git
+  git: repo=https://github.com/otland/forgottenserver.git
+       dest=/home/otsmanager/otserver
+
+- name: Create database user for TFS
+  mysql_user: name=forgottenserver password="{{forgotten_db_password}}" priv=forgottenserver.*:ALL state=present check_implicit_admin=yes
+
+- name: Create database for TFS
+  mysql_db: name=forgottenserver state=present
+
+- name: Import MySQL database from schema.sql
+  shell: (cat /home/otsmanager/otserver/schema.sql | mysql forgottenserver) && touch /home/otsmanager/.imported_db
+          creates=/home/otsmanager/.imported_db
+
+- name: Put password for database in config.lua
+  lineinfile: dest=/home/otsmanager/otserver/config.lua regexp="^mysqlPass" line='mysqlPass = "{{forgotten_db_password}}"'
+ 

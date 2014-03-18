@@ -1,0 +1,24 @@
+---
+- name: Install php5-fpm
+  apt: pkg={{ item }} state=present
+  with_items:
+    - php5-fpm
+    - php5-apcu
+    - php5-mysqlnd
+    - php5-json
+    - php5-cli
+
+- name: Set php.ini display_errors
+  lineinfile: dest=/etc/php5/fpm/php.ini line="display_errors = On" regexp="^display_errors =" state=present
+  notify: restart php5-fpm
+
+- name: Set php.ini default_timezone
+  lineinfile: dest=/etc/php5/fpm/php.ini line="date.timezone = Europe/Warsaw" regexp="date.timezone =" state=present
+  notify: restart php5-fpm
+ 
+- name: Copy php5-fpm configuration
+  template: src=templates/php5-fpm-pool.conf dest=/etc/php5/fpm/pool.d/otsmanager.conf
+  notify: restart php5-fpm
+
+- name: Start php5-fpm Service
+  service: name=php5-fpm state=started enabled=true

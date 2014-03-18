@@ -1,0 +1,20 @@
+---
+- hosts: all
+  tasks:
+    - include: tasks/general.yml
+    - include: tasks/mysql.yml
+    - include: tasks/nginx.yml
+    - include: tasks/php5-fpm.yml
+    - include: tasks/tfs.yml
+    #- include: tasks/DevAAC.yml
+
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted
+
+    - name: restart php5-fpm
+      service: name=php5-fpm state=restarted
+
+    - name: restart mysql
+      service: name=mysql state=restarted
+ 
