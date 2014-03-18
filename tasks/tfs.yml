@@ -30,4 +30,6 @@
 
 - name: Put password for database in config.lua
   lineinfile: dest=/home/otsmanager/otserver/config.lua regexp="^mysqlPass" line='mysqlPass = "{{randompass.stdout}}"'
- 
+
+- name: Chown for otsmanager
+  command: chown otsmanager:otsmanager /home/otsmanager -R

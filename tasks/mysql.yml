@@ -17,6 +17,9 @@
 
 - name: Save MySQL root password
   template: src=.my.cnf dest=/root/.my.cnf owner=root group=root mode=0600
+
+- name: Save MySQL root password (for otsmanager)
+  template: src=.my.cnf dest=/home/otsmanager/.my.cnf owner=otsmanager group=otsmanager mode=0600
   
 - name: Set MySQL root password (%)
   mysql_user: name=root password={{randompass.stdout}} host=% priv=*.*:ALL,GRANT check_implicit_admin=yes
