@@ -14,8 +14,12 @@
   git: repo=https://github.com/otland/forgottenserver.git
        dest=/home/otsmanager/otserver
 
+- name: Generate random MySQL root password
+  command: openssl rand -base64 20
+  register: randompass
+
 - name: Create database user for TFS
-  mysql_user: name=forgottenserver password="{{forgotten_db_password}}" priv=forgottenserver.*:ALL state=present check_implicit_admin=yes
+  mysql_user: name=forgottenserver password="{{randompass.stdout}}" priv=forgottenserver.*:ALL state=present check_implicit_admin=yes
 
 - name: Create database for TFS
   mysql_db: name=forgottenserver state=present
@@ -25,5 +29,5 @@
           creates=/home/otsmanager/.imported_db
 
 - name: Put password for database in config.lua
-  lineinfile: dest=/home/otsmanager/otserver/config.lua regexp="^mysqlPass" line='mysqlPass = "{{forgotten_db_password}}"'
+  lineinfile: dest=/home/otsmanager/otserver/config.lua regexp="^mysqlPass" line='mysqlPass = "{{randompass.stdout}}"'
  
