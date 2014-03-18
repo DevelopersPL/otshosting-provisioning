@@ -1,6 +1,6 @@
 ---
 - name: Install php5-fpm
-  apt: pkg={{ item }} state=present
+  apt: pkg={{ item }} state=latest
   with_items:
     - php5-fpm
     - php5-apcu
