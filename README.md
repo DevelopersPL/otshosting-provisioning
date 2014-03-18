@@ -1,10 +1,9 @@
 otshosting-provisioning
 =======================
 
-
 ```bash
 #!/bin/bash -ex
-
+apt-get update
 apt-get install -y -q python-paramiko python-yaml python-jinja2 python-simplejson
 apt-get install -y -q git-core
 apt-get install -y -q software-properties-common python-software-properties
