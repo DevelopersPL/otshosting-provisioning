@@ -1,4 +1,15 @@
 ---
+- name: Install packages needed to compile TFS
+  apt: pkg={{ item }} state=latest
+  with_items:
+   - git
+   - cmake
+   - build-essential
+   - liblua5.2-dev
+   - libgmp3-dev
+   - libmysqlclient-dev
+   - libboost-system-dev
+
 - name: Download latest TFS from git
   git: repo=https://github.com/otland/forgottenserver.git
        dest=/home/otsmanager/otserver
