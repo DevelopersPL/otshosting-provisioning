@@ -12,8 +12,11 @@
   command: openssl rand -base64 20
   register: randompass
 
+  - name: Set MySQL root password (localhost)
+  mysql_user: name=root password={{randompass.stdout}} host=localhost priv=*.*:ALL,GRANT check_implicit_admin=yes
+  
 - name: Set MySQL root password (%)
-  mysql_user: name=root password={{randompass.ustdout}} host=% priv=*.*:ALL,GRANT check_implicit_admin=yes
+  mysql_user: name=root password={{randompass.stdout}} host=% priv=*.*:ALL,GRANT check_implicit_admin=yes
 
 - name: Save MySQL root password
   template: src=.my.cnf dest=/root/.my.cnf owner=root group=root mode=0600
