@@ -20,6 +20,9 @@
 - name: Install upstart session job for TFS for otsmanager
   template: src=templates/tfs.conf dest=/home/otsmanager/.config/upstart owner=otsmanager group=otsmanager mode=0644
 
+- name: Disable upstart session job for TFS for otsmanager
+  copy: content=manual dest=/home/otsmanager/.config/upstart/tfs.override owner=otsmanager group=otsmanager mode=0644
+
 - name: Install upstart session runner 1
   template: src=templates/session-init-setup.conf dest=/etc/init/session-init-setup.conf owner=root group=root mode=0644
 
