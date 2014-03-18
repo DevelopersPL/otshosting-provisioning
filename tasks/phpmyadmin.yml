@@ -1,0 +1,9 @@
+---
+- name: Install phpmyadmin
+  apt: pkg={{ item }} state=latest
+  with_items:
+   - phpmyadmin
+
+- name: Copy nginx configuration for phpmyadmin vhost
+  template: src=templates/phpmyadmin-vhost.conf dest=/etc/nginx/sites-available/phpmyadmin
+  notify: restart nginx

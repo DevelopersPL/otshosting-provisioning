@@ -13,9 +13,17 @@
   notify: restart php5-fpm
 
 - name: Set php.ini default_timezone
-  lineinfile: dest=/etc/php5/fpm/php.ini line="date.timezone = Europe/Warsaw" regexp="date.timezone =" state=present
+  lineinfile: dest=/etc/php5/fpm/php.ini line="date.timezone = Europe/Warsaw" regexp="^date.timezone =" state=present
   notify: restart php5-fpm
- 
+
+- name: Set php.ini upload_max_filesize
+  lineinfile: dest=/etc/php5/fpm/php.ini line="upload_max_filesize = 64M" regexp="^upload_max_filesize =" state=present
+  notify: restart php5-fpm
+
+- name: Set php.ini post_max_size
+  lineinfile: dest=/etc/php5/fpm/php.ini line="post_max_size = 64M" regexp="^post_max_size =" state=present
+  notify: restart php5-fpm
+
 - name: Copy php5-fpm configuration
   template: src=templates/php5-fpm-pool.conf dest=/etc/php5/fpm/pool.d/otsmanager.conf
   notify: restart php5-fpm
