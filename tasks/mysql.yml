@@ -31,7 +31,7 @@
   mysql_user: name="" host={{item}} state=absent check_implicit_admin=yes
   with_items:
     - localhost
-    - "{{hostname}}"
+    - 127.0.0.1
 
 - name: Delete MySQL test database
   mysql_db: name=test state=absent
