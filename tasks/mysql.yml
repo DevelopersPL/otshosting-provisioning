@@ -12,7 +12,7 @@
   command: openssl rand -base64 20
   register: randompass
 
-  - name: Set MySQL root password (localhost)
+- name: Set MySQL root password (localhost)
   mysql_user: name=root password={{randompass.stdout}} host=localhost priv=*.*:ALL,GRANT check_implicit_admin=yes
   
 - name: Set MySQL root password (%)
