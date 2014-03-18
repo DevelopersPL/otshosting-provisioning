@@ -12,7 +12,7 @@
   command: openssl rand -base64 20
   register: mysql_root_password
 
-  - name: Set MySQL root password (%)
+- name: Set MySQL root password (%)
   mysql_user: name=root password={{mysql_root_password}} host=% priv=*.*:ALL,GRANT check_implicit_admin=yes
 
 - name: Save MySQL root password
