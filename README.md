@@ -26,12 +26,12 @@ A script to convert Ubuntu Cloud Image (http://cloud-images.ubuntu.com/trusty/cu
 ```bash
 #!/bin/bash
 if [ $# -ne 1 ]; then
-  echo "Usage: `basename $0` {template name in /vz/templates/cache}"
+  echo "Usage: `basename $0` {template name in /vz/template/cache}"
   exit 1
 fi
 
-if [ ! -f "$1" ]; then
-  echo "$1 is not a file"
+if [ ! -f "/vz/template/cache/$1" ]; then
+  echo "/vz/template/cache/$1 is not a file"
   exit 1
 fi
 
