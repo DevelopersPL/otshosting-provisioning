@@ -36,10 +36,12 @@
 - name: Cmake forgottenserver source
   command: cmake ..
            chdir=/home/otsmanager/forgottenserver/build
+  tags: DevAAC
 
 - name: Compile forgottenserver source
   command: make
            chdir=/home/otsmanager/forgottenserver/build
-           
-- name: Chown for otsmanager
+  tags: DevAAC           
+
+  - name: Chown for otsmanager
   command: chown otsmanager:otsmanager /home/otsmanager -R

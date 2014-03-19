@@ -3,11 +3,11 @@
   tasks:
     - include: tasks/general.yml
     - include: tasks/mysql.yml
+    - include: tasks/DevAAC.yml
+      tags: DevAAC
     - include: tasks/nginx.yml
     - include: tasks/php5-fpm.yml
     - include: tasks/tfs.yml
-    - include: tasks/DevAAC.yml
-      tags: DevAAC
 
   handlers:
     - name: restart nginx
