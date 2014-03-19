@@ -9,7 +9,7 @@
   service: name=mysql state=started enabled=true
 
 - name: Generate random MySQL root password
-  command: openssl rand -base64 20
+  command: openssl rand -base64 18
   register: randompass
 
 - name: Set MySQL root password (localhost)
