@@ -3,9 +3,14 @@
   shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
          creates=/usr/local/bin/composer.phar
 
+- git: repo=https://github.com/DevelopersPL/DevAAC.git
+       dest=/home/otsmanager/www
+
 - name: Install requirements with composer
-  shell: cd /vagrant && composer.phar install
+  shell: cd /home/otsmanager/www && composer.phar install
 
 - name: Copy config.php
-  template: src=templates/config.php dest=/home/vagrant/config.php
+  template: src=templates/config.php dest=/home/otsmanager/www/config.php
 
+- name: Chown for otsmanager
+  command: chown otsmanager:otsmanager /home/otsmanager -R

@@ -12,7 +12,7 @@
 
 - name: Download latest TFS from git
   git: repo=https://github.com/otland/forgottenserver.git
-       dest=/home/otsmanager/otserver
+       dest=/home/otsmanager/forgottenserver
 
 - name: Generate random MySQL password
   command: openssl rand -base64 18
@@ -25,10 +25,21 @@
   mysql_db: name=forgottenserver state=present
 
 - name: Import database for TFS
-  mysql_db: name=forgottenserver state=import target=/home/otsmanager/otserver/schema.sql
+  mysql_db: name=forgottenserver state=import target=/home/otsmanager/forgottenserver/schema.sql
 
 - name: Put password for database in config.lua
-  lineinfile: dest=/home/otsmanager/otserver/config.lua regexp="^mysqlPass" line='mysqlPass = "{{randompass.stdout}}"'
+  lineinfile: dest=/home/otsmanager/forgottenserver/config.lua regexp="^mysqlPass" line='mysqlPass = "{{randompass.stdout}}"'
 
+- name: Create build directory
+  file: path=/home/otsmanager/forgottenserver/build owner=otsmanager group=otsmanager mode=0755 state=directory
+
+- name: Cmake forgottenserver source
+  command: cmake ..
+           chdir=/home/otsmanager/forgottenserver/build
+
+- name: Compile forgottenserver source
+  command: make
+           chdir=/home/otsmanager/forgottenserver/build
+           
 - name: Chown for otsmanager
   command: chown otsmanager:otsmanager /home/otsmanager -R
