@@ -9,6 +9,7 @@
    - libgmp3-dev
    - libmysqlclient-dev
    - libboost-system-dev
+   - libluajit-5.1-dev
 
 - name: Download latest TFS from git
   git: repo=https://github.com/otland/forgottenserver.git
@@ -43,5 +44,5 @@
            chdir=/home/otsmanager/forgottenserver/build
   tags: DevAAC           
 
-  - name: Chown for otsmanager
+- name: Chown for otsmanager
   command: chown otsmanager:otsmanager /home/otsmanager -R
