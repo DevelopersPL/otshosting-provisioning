@@ -10,7 +10,7 @@
   shell: cd /home/otsmanager/www && HOME=/home/otsmanager composer.phar install
 
 - name: Copy config.php
-  template: src=templates/config.php dest=/home/otsmanager/www/config.php
+  template: src=templates/config.php dest=/home/otsmanager/www/public_html/config.php
 
 - name: Chown for otsmanager
   command: chown otsmanager:otsmanager /home/otsmanager -R
