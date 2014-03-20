@@ -5,7 +5,6 @@
    - git
    - cmake
    - build-essential
-   - liblua5.2-dev
    - libgmp3-dev
    - libmysqlclient-dev
    - libboost-system-dev

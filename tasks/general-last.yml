@@ -1,0 +1,3 @@
+---
+- name: Create public_html directory
+  file: path=/home/otsmanager/www/public_html owner=otsmanager group=otsmanager mode=0755 state=directory
