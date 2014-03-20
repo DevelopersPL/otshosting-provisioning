@@ -7,7 +7,7 @@
        dest=/home/otsmanager/www
 
 - name: Install requirements with composer
-  shell: cd /home/otsmanager/www && composer.phar install
+  shell: cd /home/otsmanager/www && HOME=/home/otsmanager composer.phar install
 
 - name: Copy config.php
   template: src=templates/config.php dest=/home/otsmanager/www/config.php
