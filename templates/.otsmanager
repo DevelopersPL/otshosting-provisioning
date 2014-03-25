@@ -1,3 +1,4 @@
+#!/bin/bash
 alias initctl='/sbin/initctl'
 alias start='/sbin/start'
 alias stop='/sbin/stop'
@@ -6,6 +7,22 @@ alias restart='/sbin/restart'
 alias tfsautostarton='echo "manual" > ~/.config/upstart/tfs.override'
 alias tfsautostartoff='rm -f ~/.config/upstart/tfs.override'
 export XDG_RUNTIME_DIR=/run/user/$(id -u)
-initctl list-sessions
 export UPSTART_SESSION=`initctl list-sessions | awk -F' ' '{ print $2 }'`
+
+echo "            ===   phpMyAdmin interface:   ==="
+echo "             URL: http://`wget -q http://canihazip.com/s -O -`:3380"
+echo "             Username: `cat ~/.my.cnf | sed -n -e '2{p;q}' | awk -F'=' '{ print $2 }'`"
+echo "             Password: `cat ~/.my.cnf | sed -n -e '3{p;q}' | awk -F'=' '{ print $2 }'`"
+echo -e '             You can execute \E[32;40mmysql'"\033[1m\033[0m commands without password."
+echo ""
+echo "                ===   Useful commands   ===" 
+echo " Once you run TFS with the following command, it will auto restart."
+echo -e ' Enable auto-start on boot:  \E[32;40mtfsautostarton'"\033[1m\033[0m"
+echo -e 'Disable auto-start on boot:  \E[32;40mtfsautostartoff'"\033[1m\033[0m"
+echo -e '                 Start TFS:  \E[32;40mstart tfs'"\033[1m\033[0m"
+echo -e '                  Stop TFS:  \E[32;40mstop tfs'"\033[1m\033[0m"
+echo -e '               Restart TFS:  \E[32;40mrestart tfs'"\033[1m\033[0m"
+echo -e '       Check status of TFS:  \E[32;40mstatus tfs'"\033[1m\033[0m"
+echo -e '       Monitor console log:  \E[32;40mtail -f ~/.cache/upstart/tfs.log'"\033[1m\033[0m (CTRL+C to stop)"
+echo -n "TFS Status: "
 status tfs
