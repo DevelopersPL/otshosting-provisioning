@@ -6,6 +6,7 @@
     - include: tasks/php5-fpm.yml
     - include: tasks/nginx.yml
     - include: tasks/phpmyadmin.yml
+      tags: phpMyAdmin
     - include: tasks/DevAAC.yml
       tags: DevAAC
     - include: tasks/tfs.yml

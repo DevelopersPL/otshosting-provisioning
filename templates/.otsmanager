@@ -3,6 +3,8 @@ alias start='/sbin/start'
 alias stop='/sbin/stop'
 alias status='/sbin/stop'
 alias restart='/sbin/restart'
+alias tfsautostarton='echo "manual" > ~/.config/upstart/tfs.override'
+alias tfsautostartoff='rm -f ~/.config/upstart/tfs.override'
 export XDG_RUNTIME_DIR=/run/user/$(id -u)
 initctl list-sessions
 export UPSTART_SESSION=`initctl list-sessions | awk -F' ' '{ print $2 }'`
