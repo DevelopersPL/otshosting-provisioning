@@ -7,3 +7,7 @@
 - name: Copy nginx configuration for phpmyadmin vhost
   template: src=templates/phpmyadmin-vhost.conf dest=/etc/nginx/sites-available/phpmyadmin
   notify: restart nginx
+
+- name: Enable phpmyadmin vhost
+  file: src=/etc/nginx/sites-available/phpmyadmin dest=/etc/nginx/sites-enabled/phpmyadmin owner=root group=root state=link
+  notify: restart nginx
