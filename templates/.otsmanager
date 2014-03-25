@@ -1,0 +1,4 @@
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
+initctl list-sessions
+export UPSTART_SESSION=`initctl list-sessions | awk -F' ' '{ print $2 }'`
+status tfs

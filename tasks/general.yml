@@ -28,3 +28,15 @@
 
 - name: Start upstart session
   service: name=session-init-setup state=started
+
+- name: Install .otsmanager shell configuration
+  template: src=templates/.otsmanager dest=/home/otsmanager/.otsmanager owner=otsmanager group=otsmanager mode=0644
+
+- name: Activate .otsmanager shell configuration file
+  lineinfile: dest=/home/otsmanager/.bashrc line=". ~/.otsmanager" regexp="^\. ~/\.otsmanager" state=present
+
+- name: Delete Ubuntu Cloud ad
+  file: path=/etc/update-motd.d/51-cloudguest state=absent
+
+- name: Install welcome message
+  template: src=templates/61-otshosting-motd dest=/etc/update-motd.d/61-otshosting-motd owner=root group=root mode=0755
