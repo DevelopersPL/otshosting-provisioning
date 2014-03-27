@@ -17,7 +17,7 @@ apt-get install -y -q ansible
 echo "localhost" > /tmp/ansible_hosts
 export ANSIBLE_HOSTS=/tmp/ansible_hosts
 
-ansible-pull -U https://github.com/DSpeichert/otshosting-provisioning.git -d /srv 
+ansible-pull -U https://github.com/DevelopersPL/otshosting-provisioning.git -d /srv 
 
 exit 0
 ```
