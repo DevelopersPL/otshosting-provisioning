@@ -8,7 +8,11 @@
    - libgmp3-dev
    - libmysqlclient-dev
    - libboost-system-dev
-   - libluajit-5.1-dev
+   - liblua5.2-dev
+
+- name: Install LuaJIT package if available (since Ubuntu 14.04 Trusty) - TFS will automatically choose LuaJIT if installed
+  apt: pkg=libluajit-5.1-dev state=latest
+  ignore_errors: yes
 
 - name: Download latest TFS from git
   git: repo=https://github.com/otland/forgottenserver.git

@@ -1,9 +1,10 @@
 ---
-- name: Install Mysql Server package
+- name: Install MySQL Server and backup packages
   apt: pkg={{ item }} state=latest
   with_items:
    - mysql-server
    - python-mysqldb
+   - automysqlbackup
 
 - name: Start Mysql Service
   service: name=mysql state=started enabled=true
