@@ -2,10 +2,11 @@
 alias initctl='/sbin/initctl'
 alias start='/sbin/start'
 alias stop='/sbin/stop'
-alias status='/sbin/stop'
+alias status='/sbin/status'
 alias restart='/sbin/restart'
 alias tfsautostarton='rm -f ~/.config/upstart/tfs.override'
 alias tfsautostartoff='echo "manual" > ~/.config/upstart/tfs.override'
+alias showtfslog='tail -f ~/.cache/upstart/tfs.log'
 export XDG_RUNTIME_DIR=/run/user/$(id -u)
 export UPSTART_SESSION=`initctl list-sessions | awk -F' ' '{ print $2 }'`
 
@@ -26,7 +27,7 @@ echo -e '                 Start TFS:  \E[32;40mstart tfs'"\033[1m\033[0m"
 echo -e '                  Stop TFS:  \E[32;40mstop tfs'"\033[1m\033[0m"
 echo -e '               Restart TFS:  \E[32;40mrestart tfs'"\033[1m\033[0m"
 echo -e '       Check status of TFS:  \E[32;40mstatus tfs'"\033[1m\033[0m"
-echo -e '       Monitor console log:  \E[32;40mtail -f ~/.cache/upstart/tfs.log'"\033[1m\033[0m (CTRL+C to stop)"
+echo -e '       Monitor console log:  \E[32;40mshowtfslog'"\033[1m\033[0m (CTRL+C to stop)"
 echo ""
 echo -n "Current TFS Status: "
-initctl list | grep tfs
+status tfs
