@@ -10,6 +10,8 @@
     - include: tasks/DevAAC.yml
       tags: DevAAC
     - include: tasks/tfs.yml
+    - include: tasks/tfs-old.yml
+      tags: tfs-old
     - include: tasks/general-last.yml
 
   handlers:
