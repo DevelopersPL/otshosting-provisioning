@@ -1,5 +1,5 @@
 ---
-- name: Compatibility: Install packages needed to compile old TFS (0.3)
+- name: 'Compatibility: Install packages needed to compile old TFS (0.3)'
   apt: pkg={{ item }} state=latest
   with_items:
    - autoconf
