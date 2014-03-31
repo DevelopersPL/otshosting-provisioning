@@ -7,6 +7,7 @@
   with_items:
    - mc
    - htop
+   - unrar-free
  
 - name: Create otsmanager system user
   user: name=otsmanager password=$6$e8gmLzXM.YGXKz$L5YwwV8FitP1WGZQoVTH.1mUcOyFGe7HbYxhl2jJS7a05D1BIsjxUgfxRcjTwGd9riy6w1bqfRCjIq53WN3Kh. update_password=on_create shell=/bin/bash state=present
