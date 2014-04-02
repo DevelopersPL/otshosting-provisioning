@@ -11,3 +11,8 @@
 - name: Enable phpmyadmin vhost
   file: src=/etc/nginx/sites-available/phpmyadmin dest=/etc/nginx/sites-enabled/phpmyadmin owner=root group=root state=link
   notify: restart nginx
+
+# phpmyadmin depends on php5-mcrypt but it's not enabled automatically
+- name: Disable upstart session job for TFS for otsmanager
+  file: src=/etc/php5/mods-available/mcrypt.ini dest=/etc/php5/fpm/conf.d/20-mcrypt.ini owner=root group=root state=link
+  notify: restart php5-fpm
