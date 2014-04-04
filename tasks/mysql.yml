@@ -25,11 +25,16 @@
 - name: Set MySQL root password (%)
   mysql_user: name=root password={{randompass.stdout}} host=% priv=*.*:ALL,GRANT check_implicit_admin=yes
 
+- name: Check hostname
+  command: hostname -f
+  register: realhostname
+  
 - name: Delete MySQL root accounts we don't want
   mysql_user: name=root host={{item}} state=absent check_implicit_admin=yes
   with_items:
     - 127.0.0.1
     - ::1
+    - realhostname.stdout
 
 - name: Ensure anonymous MySQL users are not in the database
   mysql_user: name="" host={{item}} state=absent check_implicit_admin=yes
