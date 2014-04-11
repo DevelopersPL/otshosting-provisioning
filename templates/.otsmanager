@@ -12,7 +12,7 @@ export XDG_RUNTIME_DIR=/run/user/$(id -u)
 export UPSTART_SESSION=`initctl list-sessions | awk -F' ' '{ print $2 }'`
 
 echo "==========   MySQL  =========="
-echo "    phpMyAdmin: http://`wget -q http://canihazip.com/s -O -`:3380"
+echo "    phpMyAdmin: http://your_server_ip_here:3380"
 echo "    Username: `cat ~/.my.cnf | sed -n -e '2{p;q}' | awk -F'=' '{ print $2 }'`"
 echo "    Password: `cat ~/.my.cnf | sed -n -e '3{p;q}' | awk -F'=' '{ print $2 }'`"
 echo -e '     You can execute \E[32;40mmysql'"\033[1m\033[0m commands without password."
