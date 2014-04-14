@@ -1,4 +1,11 @@
 ---
+- name: Install debconf to set preseed info
+  apt: pkg=debconf-utils
+
+- name: Set preseed info
+  shell: echo 'phpmyadmin phpmyadmin/dbconfig-install boolean true' | debconf-set-selections && echo 'phpmyadmin phpmyadmin/app-password-confirm password ' | debconf-set-selections && echo 'phpmyadmin phpmyadmin/mysql/admin-pass password {{randompass.stdout}}' | debconf-set-selections && echo 'phpmyadmin phpmyadmin/mysql/app-pass password ' | debconf-set-selections && echo 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect ' | debconf-set-selections
+
+
 - name: Install phpmyadmin
   apt: pkg={{ item }} state=latest
   with_items:
