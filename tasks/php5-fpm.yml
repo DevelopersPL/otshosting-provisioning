@@ -29,5 +29,9 @@
   template: src=templates/php5-fpm-pool.conf dest=/etc/php5/fpm/pool.d/otsmanager.conf
   notify: restart php5-fpm
 
+- name: Set proper permissions on the socket
+  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf line="listen.owner = www-data" regexp="listen.owner =" state=present
+  notify: restart php5-fpm
+
 - name: Start php5-fpm Service
   service: name=php5-fpm state=started enabled=true
