@@ -1,16 +1,14 @@
 #!/bin/bash
-alias initctl='/sbin/initctl'
-alias start='/sbin/start'
-alias stop='/sbin/stop'
-alias status='/sbin/status'
-alias restart='/sbin/restart'
-alias tfsautostarton='rm -f ~/.config/upstart/tfs.override'
-alias tfsautostartoff='echo "manual" > ~/.config/upstart/tfs.override'
-alias showtfslog='tail -f ~/.cache/upstart/tfs.log'
+alias start='systemctl --user start'
+alias stop='systemctl --user stop'
+alias status='systemctl --user status'
+alias restart='systemctl --user restart'
+alias enable='systemctl --user enable'
+alias disable='systemctl --user disable'
+alias showtfslog='journalctl -u tfs -f'
 alias updatetfs='cd /home/otsmanager/forgottenserver; git pull; cd build; make clean; cmake ..; make; cd ../..'
 alias whatismyip=GetLocalIP
 export XDG_RUNTIME_DIR=/run/user/$(id -u)
-export UPSTART_SESSION=`initctl list-sessions | awk -F' ' '{ print $2 }'`
 function GetLocalIP()
 {
    ip -4 -o addr show eth0 | egrep -o '([[:digit:]]{1,3}\.){3}[[:digit:]]{1,3}' | head -n 1
@@ -28,9 +26,9 @@ echo ""
 echo "    Put your website files in /home/otsmanager/www/public_html"
 echo ""
 echo "                ===   Useful commands   ===" 
-echo " Once you run TFS with the following command, it will auto restart."
-echo -e ' Enable auto-start on boot:  \E[32;40mtfsautostarton'"\033[1m\033[0m"
-echo -e 'Disable auto-start on boot:  \E[32;40mtfsautostartoff'"\033[1m\033[0m"
+echo " If you run TFS with the following commands, it will auto restart."
+echo -e ' Enable auto-start on boot:  \E[32;40menable tfs'"\033[1m\033[0m"
+echo -e 'Disable auto-start on boot:  \E[32;40mdisable tfs'"\033[1m\033[0m"
 echo -e '                 Start TFS:  \E[32;40mstart tfs'"\033[1m\033[0m"
 echo -e '                  Stop TFS:  \E[32;40mstop tfs'"\033[1m\033[0m"
 echo -e '               Restart TFS:  \E[32;40mrestart tfs'"\033[1m\033[0m"

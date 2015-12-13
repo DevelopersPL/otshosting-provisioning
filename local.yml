@@ -1,6 +1,7 @@
 ---
 - hosts: all
   tasks:
+    - include: tasks/systemd.yml
     - include: tasks/general.yml
     - include: tasks/mysql.yml
     - include: tasks/php5-fpm.yml

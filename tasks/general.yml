@@ -12,23 +12,14 @@
 - name: Create otsmanager system user
   user: name=otsmanager password=$6$e8gmLzXM.YGXKz$L5YwwV8FitP1WGZQoVTH.1mUcOyFGe7HbYxhl2jJS7a05D1BIsjxUgfxRcjTwGd9riy6w1bqfRCjIq53WN3Kh. update_password=on_create shell=/bin/bash state=present
 
-- name: Create upstart config directory for otsmanager
-  file: path=/home/otsmanager/.config/upstart owner=otsmanager group=otsmanager mode=0755 state=directory
+- name: Create systemd config directory for otsmanager
+  file: path=/home/otsmanager/.config/systemd/user/ owner=otsmanager group=otsmanager mode=0755 state=directory
 
-- name: Install upstart session job for TFS for otsmanager
-  template: src=templates/tfs.conf dest=/home/otsmanager/.config/upstart owner=otsmanager group=otsmanager mode=0644
+- name: Install systemd service for TFS for otsmanager
+  template: src=templates/tfs.service dest=/home/otsmanager/.config/systemd/user/ owner=otsmanager group=otsmanager mode=0644
 
-#- name: Disable upstart session job for TFS for otsmanager
-#  copy: content=manual dest=/home/otsmanager/.config/upstart/tfs.override owner=otsmanager group=otsmanager mode=0644
-
-- name: Install upstart session runner 1
-  template: src=templates/session-init-setup.conf dest=/etc/init/session-init-setup.conf owner=root group=root mode=0644
-
-- name: Install upstart session runner 2
-  template: src=templates/session-init.conf dest=/etc/init/session-init.conf owner=root group=root mode=0644
-
-- name: Start upstart session
-  service: name=session-init-setup state=started
+- name: loginctl enable-linger otsmanager
+  command: loginctl enable-linger otsmanager
 
 - name: Install .otsmanager shell configuration
   template: src=templates/.otsmanager dest=/home/otsmanager/.otsmanager owner=otsmanager group=otsmanager mode=0644
