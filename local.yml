@@ -2,15 +2,21 @@
 - hosts: all
   tasks:
     - include: tasks/systemd.yml
+      tags: default
     - include: tasks/general.yml
+      tags: default
     - include: tasks/mysql.yml
-    - include: tasks/php5-fpm.yml
+      tags: default
+    - include: tasks/php5-fpm.yml    
+      tags: default
     - include: tasks/nginx.yml
+      tags: default
     - include: tasks/phpmyadmin.yml
       tags: phpMyAdmin
     - include: tasks/DevAAC.yml
       tags: DevAAC
     - include: tasks/tfs.yml
+      tags: tfs
     - include: tasks/tfs-old.yml
       tags: tfs-old
     - include: tasks/general-last.yml

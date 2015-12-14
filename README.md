@@ -1,3 +1,5 @@
+You may be looking for our --> [DOCUMENTATION on wiki](https://github.com/DevelopersPL/otshosting-provisioning/wiki) <--
+
 otshosting-provisioning
 =======================
 This is an Ansible playbook used to fully provision a Ubuntu machine for OTS Hosting.
@@ -11,7 +13,7 @@ A script to run on a standalone machine to provision it. If user "otsmanager" do
 #!/bin/bash -ex
 apt-get update
 apt-get install -y -q python-paramiko python-yaml python-jinja2 python-simplejson git-core ansible
-ansible-pull -i 'localhost,' -U https://github.com/DevelopersPL/otshosting-provisioning.git -d /srv/otshosting-provisioning
+ansible-pull -i localhost, -U https://github.com/DevelopersPL/otshosting-provisioning.git -d /srv/otshosting-provisioning --purge
 ```
 
 A cloud-init script to provision cloud instances with otshosting:
@@ -30,11 +32,6 @@ package_upgrade: true
 package_update: true
 apt_mirror: http://mirror.ovh.net/ubuntu/
 
-apt_sources:
-- source: deb $MIRROR $RELEASE universe multiverse restricted
-- source: deb $MIRROR $RELEASE-updates universe multiverse restricted
-- source: deb $MIRROR $RELEASE-security universe multiverse restricted
-
 packages:
  - python-paramiko
  - python-yaml
@@ -44,6 +41,6 @@ packages:
  - ansible
  
 runcmd:
-  - 'ansible-pull -i 'lcoalhost,' -U https://github.com/DevelopersPL/otshosting-provisioning.git -d /srv/otshosting-provisioning'
+  - 'ansible-pull -i localhost, -U https://github.com/DevelopersPL/otshosting-provisioning.git -d /srv/otshosting-provisioning' --purge
 
 ```
