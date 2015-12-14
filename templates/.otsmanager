@@ -5,10 +5,11 @@ alias status='systemctl --user status'
 alias restart='systemctl --user restart'
 alias enable='systemctl --user enable'
 alias disable='systemctl --user disable'
-alias showtfslog='journalctl -u tfs -f'
+alias log='journalctl --user --user-unit'
+alias follow='journalctl --user -f --user-unit'
 alias updatetfs='cd /home/otsmanager/forgottenserver; git pull; cd build; make clean; cmake ..; make; cd ../..'
-alias whatismyip=GetLocalIP
-export XDG_RUNTIME_DIR=/run/user/$(id -u)
+alias myip=GetLocalIP
+alias duedate=`echo date -d $(curl -m 1 -s https://spigu.net/api/otshosting/expires)`
 function GetLocalIP()
 {
    ip -4 -o addr show eth0 | egrep -o '([[:digit:]]{1,3}\.){3}[[:digit:]]{1,3}' | head -n 1
@@ -16,16 +17,15 @@ function GetLocalIP()
 
 expires=$(curl -m 1 -s https://spigu.net/api/otshosting/expires)
 
-echo "==========   MySQL  =========="
+echo "===================   MySQL   ==================="
 echo "    phpMyAdmin: http://$(GetLocalIP):3380"
 echo "    Username: `cat ~/.my.cnf | sed -n -e '2{p;q}' | awk -F'=' '{ print $2 }'`"
 echo "    Password: `cat ~/.my.cnf | sed -n -e '3{p;q}' | awk -F'=' '{ print $2 }'`"
 echo -e '    You can execute \E[32;40mmysql'"\033[1m\033[0m commands without password."
 echo "    Total size and location of MySQL backups: `du -hs /var/lib/automysqlbackup/`"
-echo ""
 echo "    Put your website files in /home/otsmanager/www/public_html"
 echo ""
-echo "                ===   Useful commands   ===" 
+echo "===================   Useful commands   ===================" 
 echo " If you run TFS with the following commands, it will auto restart."
 echo -e ' Enable auto-start on boot:  \E[32;40menable tfs'"\033[1m\033[0m"
 echo -e 'Disable auto-start on boot:  \E[32;40mdisable tfs'"\033[1m\033[0m"
@@ -33,10 +33,11 @@ echo -e '                 Start TFS:  \E[32;40mstart tfs'"\033[1m\033[0m"
 echo -e '                  Stop TFS:  \E[32;40mstop tfs'"\033[1m\033[0m"
 echo -e '               Restart TFS:  \E[32;40mrestart tfs'"\033[1m\033[0m"
 echo -e '       Check status of TFS:  \E[32;40mstatus tfs'"\033[1m\033[0m"
-echo -e '       Monitor console log:  \E[32;40mshowtfslog'"\033[1m\033[0m (CTRL+C to stop)"
+echo -e '         Show full TFS log:  \E[32;40mlog tfs'"\033[1m\033[0m (q to exit)"
+echo -e '        Follow TFS console:  \E[32;40mfollow tfs'"\033[1m\033[0m (CTRL+C to stop)"
 echo ""
-if [ "not found" -ne "$expires" ]; then
-    echo -e "\e[0;31mYour service expires on $(date -d $expires)\033[1m\033[0m"
+if [ "not found" != "$expires" ]; then
+    echo -e "\e[0;33mYour service expires on $(date -d $expires)\033[1m\033[0m"
 fi
 echo -n "Current TFS status: "
 status tfs
