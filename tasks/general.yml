@@ -8,6 +8,8 @@
    - mc
    - htop
    - unrar
+   - rar
+   - zip
  
 - name: Remove LXC in case it's installed (Ubuntu Cloud has it)
   apt: pkg=lxc state=absent
