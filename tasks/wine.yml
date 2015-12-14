@@ -1,0 +1,6 @@
+---
+- name: Add i386 architecture for wine
+  command: dpkg --add-architecture i386
+
+- name: Install wine
+  apt: pkg=wine state=latest update_cache=yes

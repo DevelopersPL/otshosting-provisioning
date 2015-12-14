@@ -14,6 +14,8 @@
     - include: tasks/tfs-old.yml
       tags: tfs-old
     - include: tasks/general-last.yml
+    - include: tasks/wine.yml
+      tags: wine
 
   handlers:
     - name: restart systemd-journald
