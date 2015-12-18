@@ -20,6 +20,9 @@
 - name: Create otsmanager system user
   user: name=otsmanager password=$6$e8gmLzXM.YGXKz$L5YwwV8FitP1WGZQoVTH.1mUcOyFGe7HbYxhl2jJS7a05D1BIsjxUgfxRcjTwGd9riy6w1bqfRCjIq53WN3Kh. update_password=on_create shell=/bin/bash groups=systemd-journal append=yes state=present
 
+- name: Select editor for otsmanager
+  copy: dest=/home/otsmanager/.selected_editor content="SELECTED_EDITOR=\"/usr/bin/mcedit\""  owner=otsmanager group=otsmanager
+  
 - name: Create systemd config directory for otsmanager
   file: path=/home/otsmanager/.config/systemd/user/ owner=otsmanager group=otsmanager mode=0755 state=directory
 
