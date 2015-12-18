@@ -10,6 +10,7 @@
    - unrar
    - rar
    - zip
+   - p7zip
  
 - name: Remove LXC in case it's installed (Ubuntu Cloud has it)
   apt: pkg={{item}} state=absent
