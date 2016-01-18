@@ -23,6 +23,9 @@
 - name: Create /etc/systemd/journald.conf.d
   file: path=/etc/systemd/journald.conf.d state=directory
 
+- name: Create /var/log/journal
+  file: path=/var/log/journal state=directory owner=root group=systemd-journal mode=2755
+
 - name: Install /etc/systemd/journald.conf.d/journald.conf
   template: src=systemd/journald.conf dest=/etc/systemd/journald.conf.d/journald.conf owner=root group=root mode=0644
   notify: restart systemd-journald
