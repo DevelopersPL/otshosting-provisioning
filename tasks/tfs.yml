@@ -15,7 +15,7 @@
   ignore_errors: yes
 
 - name: Download latest TFS from git
-  git: repo=https://github.com/otland/forgottenserver.git
+  git: repo=https://github.com/otland/forgottenserver.git version=1.1
        dest=/home/otsmanager/forgottenserver
 
 - name: Generate random MySQL password
