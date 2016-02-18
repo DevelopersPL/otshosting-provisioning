@@ -35,6 +35,9 @@
 - name: Put password for database in config.lua
   lineinfile: dest=/home/otsmanager/forgottenserver/config.lua regexp="^mysqlPass" line='mysqlPass = "{{randompass.stdout}}"'
 
+- name: Put server's IP address in config.lua
+  lineinfile: dest=/home/otsmanager/forgottenserver/config.lua regexp="^ip =" line='ip = "{{ansible_default_ipv4.address}}"'
+
 - name: Create build directory
   file: path=/home/otsmanager/forgottenserver/build owner=otsmanager group=otsmanager mode=0755 state=directory
 
