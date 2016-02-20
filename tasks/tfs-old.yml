@@ -9,5 +9,4 @@
    - libboost-filesystem-dev
    - liblua5.1-dev
    - libcrypto++-dev
-   - libcurl4-openssl-dev
    - libssl-dev
