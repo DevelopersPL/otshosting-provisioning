@@ -6,6 +6,7 @@
     - php-apcu
     - php-mysqlnd
     - php-curl
+    - composer
 
 - name: Set php.ini display_errors
   lineinfile: dest=/etc/php/7.0/fpm/php.ini line="display_errors = On" regexp="^display_errors =" state=present
