@@ -6,6 +6,7 @@
     - php-apcu
     - php-mysqlnd
     - php-curl
+    - php-xml
     - composer
 
 - name: Set php.ini display_errors
