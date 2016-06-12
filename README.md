@@ -12,7 +12,6 @@ A script to run on a standalone machine to provision it. If user "otsmanager" do
 ```bash
 #!/bin/bash -ex
 apt-get update
-apt-get install -y -q python-paramiko python-yaml python-jinja2 # not needed on Ubuntu 16.04
 apt-get install -y -q python-simplejson git-core ansible aptitude
 ansible-pull -i localhost, -U https://github.com/DevelopersPL/otshosting-provisioning.git -d /srv/otshosting-provisioning --purge
 ```
@@ -34,9 +33,6 @@ package_update: true
 apt_mirror: http://mirror.ovh.net/ubuntu/
 
 packages:
- - python-paramiko
- - python-yaml
- - python-jinja2
  - python-simplejson
  - git
  - ansible
