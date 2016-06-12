@@ -1,0 +1,31 @@
+---
+- name: Install php-fpm
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - php-fpm
+    - php-apcu
+    - php-mysqlnd
+    - php-curl
+
+- name: Set php.ini display_errors
+  lineinfile: dest=/etc/php/7.0/fpm/php.ini line="display_errors = On" regexp="^display_errors =" state=present
+  notify: restart php7.0-fpm
+
+- name: Set php.ini default_timezone
+  lineinfile: dest=/etc/php/7.0/fpm/php.ini line="date.timezone = Europe/Warsaw" regexp="^date.timezone =" state=present
+  notify: restart php7.0-fpm
+
+- name: Set php.ini upload_max_filesize
+  lineinfile: dest=/etc/php/7.0/fpm/php.ini line="upload_max_filesize = 64M" regexp="^upload_max_filesize =" state=present
+  notify: restart php7.0-fpm
+
+- name: Set php.ini post_max_size
+  lineinfile: dest=/etc/php/7.0/fpm/php.ini line="post_max_size = 64M" regexp="^post_max_size =" state=present
+  notify: restart php7.0-fpm
+
+- name: Copy php7.0-fpm pool configuration
+  template: src=templates/php5-fpm-pool.conf dest=/etc/php/7.0/fpm/pool.d/otsmanager.conf
+  notify: restart php7.0-fpm
+
+- name: Start php7.0-fpm Service
+  service: name=php7.0-fpm state=started enabled=true
