@@ -25,7 +25,7 @@
   notify: restart php7.0-fpm
 
 - name: Copy php7.0-fpm pool configuration
-  template: src=templates/php5-fpm-pool.conf dest=/etc/php/7.0/fpm/pool.d/otsmanager.conf
+  template: src=templates/php-fpm-pool.conf dest=/etc/php/7.0/fpm/pool.d/otsmanager.conf
   notify: restart php7.0-fpm
 
 - name: Start php7.0-fpm Service
