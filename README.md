@@ -39,6 +39,6 @@ packages:
  - aptitude
  
 runcmd:
-  - 'ansible-pull -i localhost, -U https://github.com/DevelopersPL/otshosting-provisioning.git -d /srv/otshosting-provisioning' --purge
+  - 'ansible-pull -i localhost, -U https://github.com/DevelopersPL/otshosting-provisioning.git -d /srv/otshosting-provisioning --purge'
 
 ```
