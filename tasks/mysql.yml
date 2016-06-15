@@ -44,3 +44,6 @@
 
 - name: Delete MySQL test database
   mysql_db: name=test state=absent
+
+- name: Allow otsmanager to access automysqlbackup directory
+  file: path=/var/lib/automysqlbackup state=directory group=otsmanager

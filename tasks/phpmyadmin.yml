@@ -5,11 +5,8 @@
 - name: Set preseed info
   shell: echo 'phpmyadmin phpmyadmin/dbconfig-install boolean true' | debconf-set-selections && echo 'phpmyadmin phpmyadmin/app-password-confirm password ' | debconf-set-selections && echo 'phpmyadmin phpmyadmin/mysql/admin-pass password {{randompass.stdout}}' | debconf-set-selections && echo 'phpmyadmin phpmyadmin/mysql/app-pass password ' | debconf-set-selections && echo 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect ' | debconf-set-selections
 
-
 - name: Install phpmyadmin
-  apt: pkg={{ item }} state=latest
-  with_items:
-   - phpmyadmin
+  apt: pkg=phpmyadmin state=latest
 
 - name: Copy nginx configuration for phpmyadmin vhost
   template: src=templates/phpmyadmin-vhost.conf dest=/etc/nginx/sites-available/phpmyadmin
@@ -23,3 +20,4 @@
 - name: Enable mcrypt for PHP5-FPM
   file: src=../../mods-available/mcrypt.ini dest=/etc/php5/fpm/conf.d/20-mcrypt.ini owner=root group=root state=link force=true
   notify: restart php5-fpm
+  when: ansible_distribution_major_version < 16

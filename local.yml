@@ -1,13 +1,23 @@
 ---
 - hosts: all
   tasks:
+    - fail: msg="This playbook only works on Ubuntu systems!"
+      when: ansible_distribution != 'Ubuntu'
+      tags: default
+    - fail: msg="This playbook requires Ubuntu >= 15.04"
+      when: ansible_distribution_major_version < 15
+      tags: default
     - include: tasks/systemd.yml
       tags: default
     - include: tasks/general.yml
       tags: default
     - include: tasks/mysql.yml
       tags: default
-    - include: tasks/php5-fpm.yml    
+    - include: tasks/php5-fpm.yml  
+      when: ansible_distribution_major_version < 16
+      tags: default
+    - include: tasks/php7.0-fpm.yml
+      when: ansible_distribution_major_version > 15
       tags: default
     - include: tasks/nginx.yml
       tags: default
@@ -29,6 +39,9 @@
     - name: restart nginx
       service: name=nginx state=restarted
 
+    - name: restart php7.0-fpm
+      service: name=php7.0-fpm state=restarted
+      
     - name: restart php5-fpm
       service: name=php5-fpm state=restarted
 

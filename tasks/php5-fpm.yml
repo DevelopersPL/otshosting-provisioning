@@ -8,6 +8,7 @@
     - php5-json
     - php5-cli
     - php5-curl
+    - composer
 
 - name: Set php.ini display_errors
   lineinfile: dest=/etc/php5/fpm/php.ini line="display_errors = On" regexp="^display_errors =" state=present
@@ -26,7 +27,7 @@
   notify: restart php5-fpm
 
 - name: Copy php5-fpm configuration
-  template: src=templates/php5-fpm-pool.conf dest=/etc/php5/fpm/pool.d/otsmanager.conf
+  template: src=templates/php-fpm-pool.conf dest=/etc/php5/fpm/pool.d/otsmanager.conf
   notify: restart php5-fpm
 
 - name: Set proper permissions on the socket

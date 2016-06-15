@@ -1,16 +1,14 @@
 ---
-- name: Install composer
-  shell: curl -sS https://getcomposer.org/installer | HOME=/root php -- --install-dir=/usr/local/bin
-         creates=/usr/local/bin/composer.phar
-
-- git: repo=https://github.com/DevelopersPL/DevAAC.git
-       dest=/home/otsmanager/www
+- git: repo=https://github.com/DevelopersPL/DevAAC.git dest=/home/otsmanager/www
+  become: true
+  become_user: otsmanager
 
 - name: Install requirements with composer
-  shell: cd /home/otsmanager/www && HOME=/home/otsmanager /usr/local/bin/composer.phar install
+  composer: command=install working_dir=/home/otsmanager/www
+  become: true
+  become_user: otsmanager
 
 - name: Copy config.php
   template: src=templates/config.php dest=/home/otsmanager/www/public_html/config.php
-
-- name: Chown for otsmanager
-  command: chown otsmanager:otsmanager /home/otsmanager -R
+  become: true
+  become_user: otsmanager
