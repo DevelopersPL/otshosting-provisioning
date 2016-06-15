@@ -5,7 +5,7 @@
       when: ansible_distribution != 'Ubuntu'
       tags: default
     - fail: msg="This playbook requires Ubuntu >= 15.04"
-      when: ansible_distribution_major_version < 15
+      when: ansible_distribution_major_version|int < 15
       tags: default
     - include: tasks/systemd.yml
       tags: default
@@ -14,10 +14,10 @@
     - include: tasks/mysql.yml
       tags: default
     - include: tasks/php5-fpm.yml  
-      when: ansible_distribution_major_version < 16
+      when: ansible_distribution_major_version|int < 16
       tags: default
     - include: tasks/php7.0-fpm.yml
-      when: ansible_distribution_major_version > 15
+      when: ansible_distribution_major_version|int > 15
       tags: default
     - include: tasks/nginx.yml
       tags: default
