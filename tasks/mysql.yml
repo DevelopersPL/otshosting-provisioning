@@ -11,10 +11,10 @@
   when: ansible_distribution_major_version|int > 15
   notify: restart mysql
 
-- meta: flush_handlers
-
 - name: Start Mysql Service
   service: name=mysql state=started enabled=true
+
+- meta: flush_handlers
 
 - name: Generate random MySQL root password
   command: openssl rand -base64 18
