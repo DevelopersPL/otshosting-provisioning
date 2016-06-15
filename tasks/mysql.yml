@@ -12,9 +12,7 @@
   notify: restart mysql
 
 - name: Start Mysql Service
-  service: name=mysql state=started enabled=true
-
-- meta: flush_handlers
+  service: name=mysql state=restarted enabled=true
 
 - name: Generate random MySQL root password
   command: openssl rand -base64 18
