@@ -6,6 +6,11 @@
    - python-mysqldb
    - automysqlbackup
 
+- name: Change MySQL charset to prevent MySQL error 1709
+  template: src=templates/60-charset.cnf dest=/etc/mysql/mariadb.conf.d/60-charset.cnf
+  when: ansible_distribution_major_version|int > 15
+  notify: restart mysql
+
 - name: Start Mysql Service
   service: name=mysql state=started enabled=true
 
@@ -21,6 +26,27 @@
   
 - name: Set MySQL otsmanager password (%)
   mysql_user: name=otsmanager password={{randompass.stdout}} host=% priv=*.*:ALL,GRANT check_implicit_admin=yes
+
+- name: Check hostname
+  command: hostname -f
+  register: realhostname
+
+- name: Delete MySQL root accounts we don't want
+  mysql_user: name=root host={{item}} state=absent check_implicit_admin=yes
+  with_items:
+    - 127.0.0.1
+    - ::1
+    - realhostname.stdout
+    - '%'
+
+- name: Ensure anonymous MySQL users are not in the database
+  mysql_user: name="" host={{item}} state=absent check_implicit_admin=yes
+  with_items:
+    - localhost
+    - 127.0.0.1
+
+- name: Delete MySQL test database
+  mysql_db: name=test state=absent
 
 - name: Allow otsmanager to access automysqlbackup directory
   file: path=/var/lib/automysqlbackup state=directory group=otsmanager
