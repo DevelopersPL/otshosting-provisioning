@@ -8,8 +8,14 @@
 - name: Install phpmyadmin
   apt: pkg=phpmyadmin state=latest
 
-- name: Copy nginx configuration for phpmyadmin vhost
+- name: Copy nginx configuration for phpmyadmin vhost (PHP 5)
   template: src=templates/phpmyadmin-vhost.conf dest=/etc/nginx/sites-available/phpmyadmin
+  when: ansible_distribution_major_version|int < 16
+  notify: restart nginx
+
+- name: Copy nginx configuration for phpmyadmin vhost (PHP 7.0)
+  template: src=templates/phpmyadmin-vhost-php7.conf dest=/etc/nginx/sites-available/phpmyadmin
+  when: ansible_distribution_major_version|int > 15
   notify: restart nginx
 
 - name: Enable phpmyadmin vhost
@@ -20,4 +26,4 @@
 - name: Enable mcrypt for PHP5-FPM
   file: src=../../mods-available/mcrypt.ini dest=/etc/php5/fpm/conf.d/20-mcrypt.ini owner=root group=root state=link force=true
   notify: restart php5-fpm
-  when: ansible_distribution_major_version < 16
+  when: ansible_distribution_major_version|int < 16
