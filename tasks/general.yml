@@ -1,4 +1,11 @@
 ---
+- name: Remove LXC, snapd in case it's installed (Ubuntu Cloud has it)
+  apt: pkg={{item}} state=absent
+  with_items:
+    - lxc
+    - lxd
+    - snapd
+
 - name: Upgrade whole system
   apt: upgrade=full
 
@@ -12,13 +19,6 @@
    - zip
    - p7zip
  
-- name: Remove LXC, snapd in case it's installed (Ubuntu Cloud has it)
-  apt: pkg={{item}} state=absent
-  with_items:
-    - lxc
-    - lxd
-    - snapd
-
 - name: Create otsmanager system user
   user: name=otsmanager password=$6$e8gmLzXM.YGXKz$L5YwwV8FitP1WGZQoVTH.1mUcOyFGe7HbYxhl2jJS7a05D1BIsjxUgfxRcjTwGd9riy6w1bqfRCjIq53WN3Kh. update_password=on_create shell=/bin/bash groups=systemd-journal append=yes state=present
 
