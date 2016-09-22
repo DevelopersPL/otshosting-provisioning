@@ -34,8 +34,12 @@
       tags: wine
 
   handlers:
+    - name: reload systemd
+      command: /bin/systemctl daemon-reload
+
     - name: restart systemd-journald
       service: name=systemd-journald state=restarted
+
     - name: restart nginx
       service: name=nginx state=restarted
 
