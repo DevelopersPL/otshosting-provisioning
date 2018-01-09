@@ -39,7 +39,6 @@
     remote_src: yes
     owner: otsmanager
     group: otsmanager
-    creates: /home/otsmanager/forgottenserver/config.lua
 
 - name: Put password for database in config.lua
   lineinfile: dest=/home/otsmanager/forgottenserver/config.lua regexp="^mysqlPass" line='mysqlPass = "{{randompass.stdout}}"'
