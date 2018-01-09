@@ -32,6 +32,15 @@
 - name: Import database for TFS
   mysql_db: name=forgottenserver state=import target=/home/otsmanager/forgottenserver/schema.sql
 
+- name: Copy config.lua.dist to config.lua if necessary
+  copy:
+    dest: /home/otsmanager/forgottenserver/config.lua
+    src: /home/otsmanager/forgottenserver/config.lua.dist
+    remote_src: yes
+    owner: otsmanager
+    group: otsmanager
+    creates: /home/otsmanager/forgottenserver/config.lua
+
 - name: Put password for database in config.lua
   lineinfile: dest=/home/otsmanager/forgottenserver/config.lua regexp="^mysqlPass" line='mysqlPass = "{{randompass.stdout}}"'
 
