@@ -12,6 +12,7 @@
    - libpugixml-dev
    - libluajit-5.1-dev
    - libboost-iostreams-dev
+   - libcrypto++-dev
 
 - name: Download latest TFS from git
   git: repo=https://github.com/otland/forgottenserver.git
