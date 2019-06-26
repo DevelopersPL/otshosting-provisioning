@@ -8,6 +8,7 @@
    - libgmp3-dev
    - libmysqlclient-dev
    - libboost-system-dev
+   - libboost-filesystem-dev
    - liblua5.2-dev
    - libpugixml-dev
    - libluajit-5.1-dev
