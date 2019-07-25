@@ -1,23 +1,25 @@
 ---
 - name: Install packages needed to compile TFS
-  apt: pkg={{ item }} state=latest
-  with_items:
-   - git
-   - cmake
-   - build-essential
-   - libgmp3-dev
-   - libmysqlclient-dev
-   - libboost-system-dev
-   - libboost-filesystem-dev
-   - liblua5.2-dev
-   - libpugixml-dev
-   - libluajit-5.1-dev
-   - libboost-iostreams-dev
-   - libcrypto++-dev
+  apt:
+    state: latest
+    pkg:
+      - git
+      - cmake
+      - build-essential
+      - libgmp3-dev
+      - libmysqlclient-dev
+      - libboost-system-dev
+      - libboost-filesystem-dev
+      - liblua5.2-dev
+      - libpugixml-dev
+      - libluajit-5.1-dev
+      - libboost-iostreams-dev
+      - libcrypto++-dev
 
 - name: Download latest TFS from git
-  git: repo=https://github.com/otland/forgottenserver.git
-       dest=/home/otsmanager/forgottenserver
+  git:
+    repo: https://github.com/otland/forgottenserver.git
+    dest: /home/otsmanager/forgottenserver
   become: true
   become_user: otsmanager
 
@@ -26,13 +28,21 @@
   register: randompass
 
 - name: Create database user for TFS
-  mysql_user: name=forgottenserver password="{{randompass.stdout}}" priv=forgottenserver.*:ALL state=present check_implicit_admin=yes
+  mysql_user:
+    name: forgottenserver
+    password: "{{randompass.stdout}}"
+    priv: forgottenserver.*:ALL
+    check_implicit_admin: yes
 
 - name: Create database for TFS
-  mysql_db: name=forgottenserver state=present
+  mysql_db:
+    name: forgottenserver
 
 - name: Import database for TFS
-  mysql_db: name=forgottenserver state=import target=/home/otsmanager/forgottenserver/schema.sql
+  mysql_db:
+    name: forgottenserver
+    state: import
+    target: /home/otsmanager/forgottenserver/schema.sql
 
 - name: Copy config.lua.dist to config.lua if necessary
   copy:
@@ -43,24 +53,39 @@
     group: otsmanager
 
 - name: Put password for database in config.lua
-  lineinfile: dest=/home/otsmanager/forgottenserver/config.lua regexp="^mysqlPass" line='mysqlPass = "{{randompass.stdout}}"'
+  lineinfile:
+    dest: /home/otsmanager/forgottenserver/config.lua
+    regexp: ^mysqlPass
+    line: 'mysqlPass = "{{randompass.stdout}}"'
 
 - name: Put server's IP address in config.lua
-  lineinfile: dest=/home/otsmanager/forgottenserver/config.lua regexp="^ip =" line='ip = "{{ansible_default_ipv4.address}}"'
+  lineinfile:
+    dest: /home/otsmanager/forgottenserver/config.lua
+    regexp: "^ip ="
+    line: 'ip = "{{ansible_default_ipv4.address}}"'
 
 - name: Create build directory
-  file: path=/home/otsmanager/forgottenserver/build owner=otsmanager group=otsmanager mode=0755 state=directory
+  file:
+    path: /home/otsmanager/forgottenserver/build
+    owner: otsmanager
+    group: otsmanager
+    mode: 0755
+    state: directory
   become: true
   become_user: otsmanager
 
 - name: Cmake forgottenserver source
-  command: cmake .. chdir=/home/otsmanager/forgottenserver/build
+  command: cmake ..
+  args:
+    chdir: /home/otsmanager/forgottenserver/build
   tags: compile
   become: true
   become_user: otsmanager
 
 - name: Compile forgottenserver source
-  command: make chdir=/home/otsmanager/forgottenserver/build
+  command: make -j2
+  args:
+    chdir: /home/otsmanager/forgottenserver/build
   tags: compile
   become: true
   become_user: otsmanager

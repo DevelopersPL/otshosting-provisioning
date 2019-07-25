@@ -1,12 +1,13 @@
 ---
 - name: 'Compatibility: Install packages needed to compile old TFS (0.3)'
-  apt: pkg={{ item }} state=latest
-  with_items:
-   - autoconf
-   - libxml2-dev
-   - libboost-thread-dev
-   - libboost-regex-dev
-   - libboost-filesystem-dev
-   - liblua5.1-dev
-   - libcrypto++-dev
-   - libssl-dev
+  apt:
+    state: latest
+    pkg:
+      - autoconf
+      - libxml2-dev
+      - libboost-thread-dev
+      - libboost-regex-dev
+      - libboost-filesystem-dev
+      - liblua5.1-dev
+      - libcrypto++-dev
+      - libssl-dev

@@ -1,53 +1,87 @@
 ---
 - hosts: all
-  tasks:
-    - fail: msg="This playbook only works on Ubuntu systems!"
-      when: ansible_distribution != 'Ubuntu'
-      tags: default
-    - fail: msg="This playbook requires Ubuntu >= 15.04"
-      when: ansible_distribution_major_version|int < 15
-      tags: default
-    - include: tasks/systemd.yml
-      tags: default
-    - include: tasks/general.yml
-      tags: default
-    - include: tasks/mysql.yml
-      tags: default
-    - include: tasks/php5-fpm.yml  
-      when: ansible_distribution_major_version|int < 16
-      tags: default
-    - include: tasks/php7.0-fpm.yml
-      when: ansible_distribution_major_version|int > 15
-      tags: default
-    - include: tasks/nginx.yml
-      tags: default
-    - include: tasks/phpmyadmin.yml
-      tags: phpMyAdmin
-    - include: tasks/DevAAC.yml
-      tags: DevAAC
-    - include: tasks/tfs.yml
-      tags: tfs
-    - include: tasks/tfs-old.yml
-      tags: tfs-old
-    - include: tasks/general-last.yml
-    - include: tasks/wine.yml
-      tags: wine
-
   handlers:
     - name: reload systemd
       command: /bin/systemctl daemon-reload
 
     - name: restart systemd-journald
-      service: name=systemd-journald state=restarted
+      service:
+        name: systemd-journald
+        state: restarted
 
     - name: restart nginx
-      service: name=nginx state=restarted
+      service:
+        name: nginx
+        state: restarted
+
+    - name: restart php5-fpm
+      service:
+        name: php5-fpm
+        state: restarted
 
     - name: restart php7.0-fpm
-      service: name=php7.0-fpm state=restarted
-      
-    - name: restart php5-fpm
-      service: name=php5-fpm state=restarted
+      service:
+        name: php7.0-fpm
+        state: restarted
+
+    - name: restart php7.2-fpm
+      service:
+        name: php7.2-fpm
+        state: restarted
 
     - name: restart mysql
-      service: name=mysql state=restarted
+      service:
+        name: mysql
+        state: restarted
+
+  tasks:
+    - name: Fail if not running on Ubuntu
+      fail: msg="This playbook only works on Ubuntu systems!"
+      when: ansible_distribution != 'Ubuntu'
+      tags: default
+
+    - name: Fail if Ubuntu older than 15.04
+      fail: msg="This playbook requires Ubuntu >= 15.04"
+      when: ansible_distribution_major_version|int < 15
+      tags: default
+
+    - include: tasks/systemd.yml
+      tags: default
+
+    - include: tasks/general.yml
+      tags: default
+
+    - include: tasks/mysql.yml
+      tags: default
+
+    - include: tasks/php5-fpm.yml
+      when: ansible_distribution_major_version|int == 15
+      tags: default
+
+    - include: tasks/php7.0-fpm.yml
+      when: ansible_distribution_major_version|int == 16 or ansible_distribution_major_version|int == 17
+      tags: default
+
+    - include: tasks/php7.2-fpm.yml
+      when: ansible_distribution_major_version|int >= 18
+      tags: default
+
+    - include: tasks/nginx.yml
+      tags: default
+
+    - include: tasks/phpmyadmin.yml
+      tags: phpMyAdmin
+
+    - include: tasks/DevAAC.yml
+      tags: DevAAC
+
+    - include: tasks/tfs.yml
+      tags: tfs
+
+    - include: tasks/tfs-old.yml
+      tags: tfs-old
+
+    - include: tasks/general-last.yml
+
+    - include: tasks/wine.yml
+      tags: wine

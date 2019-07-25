@@ -1,47 +1,86 @@
 ---
 - name: Remove LXC, snapd in case it's installed (Ubuntu Cloud has it)
-  apt: pkg={{item}} state=absent
-  with_items:
-    - lxc
-    - lxd
-    - snapd
+  apt:
+    state: absent
+    pkg:
+      - lxc
+      - lxd
+      - snapd
 
 - name: Upgrade whole system
-  apt: upgrade=full
+  apt:
+    upgrade: full
 
 - name: Install admin essentials
-  apt: pkg={{ item }} state=latest
-  with_items:
-   - mc
-   - htop
-   - unrar
-   - rar
-   - zip
-   - p7zip
+  apt:
+    state: latest
+    pkg:
+      - mc
+      - htop
+      - unrar
+      - rar
+      - zip
+      - p7zip
+      - curl
  
 - name: Create otsmanager system user
-  user: name=otsmanager password=$6$e8gmLzXM.YGXKz$L5YwwV8FitP1WGZQoVTH.1mUcOyFGe7HbYxhl2jJS7a05D1BIsjxUgfxRcjTwGd9riy6w1bqfRCjIq53WN3Kh. update_password=on_create shell=/bin/bash groups=systemd-journal append=yes state=present
+  user:
+    name: otsmanager
+    password: $6$e8gmLzXM.YGXKz$L5YwwV8FitP1WGZQoVTH.1mUcOyFGe7HbYxhl2jJS7a05D1BIsjxUgfxRcjTwGd9riy6w1bqfRCjIq53WN3Kh.
+    update_password: on_create
+    shell: /bin/bash
+    groups: systemd-journal
+    append: yes
 
 - name: Select editor for otsmanager
-  copy: dest=/home/otsmanager/.selected_editor content="SELECTED_EDITOR=\"/usr/bin/mcedit\""  owner=otsmanager group=otsmanager
+  copy:
+    dest: /home/otsmanager/.selected_editor
+    content: "SELECTED_EDITOR=\"/usr/bin/mcedit\""
+    owner: otsmanager
+    group: otsmanager
   
 - name: Create systemd config directory for otsmanager
-  file: path=/home/otsmanager/.config/systemd/user/ owner=otsmanager group=otsmanager mode=0755 state=directory
+  file:
+    path: /home/otsmanager/.config/systemd/user/
+    owner: otsmanager
+    group: otsmanager
+    mode: 0755
+    state: directory
 
 - name: Install systemd service for TFS for otsmanager
-  template: src=templates/tfs.service dest=/home/otsmanager/.config/systemd/user/ owner=otsmanager group=otsmanager mode=0644
+  template:
+    src: templates/tfs.service
+    dest: /home/otsmanager/.config/systemd/user/
+    owner: otsmanager
+    group: otsmanager
+    mode: 0644
 
 - name: loginctl enable-linger otsmanager
   command: loginctl enable-linger otsmanager
 
 - name: Install .otsmanager shell configuration
-  template: src=templates/.otsmanager dest=/home/otsmanager/.otsmanager owner=otsmanager group=otsmanager mode=0644
+  template:
+    src: templates/.otsmanager
+    dest: /home/otsmanager/.otsmanager
+    owner: otsmanager
+    group: otsmanager
+    mode: 0644
 
 - name: Activate .otsmanager shell configuration file
-  lineinfile: dest=/home/otsmanager/.bashrc line=". ~/.otsmanager" regexp="^\. ~/\.otsmanager" state=present
+  lineinfile:
+    dest: /home/otsmanager/.bashrc
+    line: . ~/.otsmanager
+    regexp: "^\. ~/\.otsmanager"
 
 - name: Delete Ubuntu Cloud ad
-  file: path=/etc/update-motd.d/51-cloudguest state=absent
+  file:
+    path: /etc/update-motd.d/51-cloudguest
+    state: absent
 
 - name: Install welcome message
-  template: src=templates/61-otshosting-motd dest=/etc/update-motd.d/61-otshosting-motd owner=root group=root mode=0755
+  template:
+    src: templates/61-otshosting-motd
+    dest: /etc/update-motd.d/61-otshosting-motd
+    owner: root
+    group: root
+    mode: 0755

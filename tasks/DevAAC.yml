@@ -1,14 +1,21 @@
 ---
-- git: repo=https://github.com/DevelopersPL/DevAAC.git dest=/home/otsmanager/www
+- name: Clone DevAAC from git
+  git:
+    repo: https://github.com/DevelopersPL/DevAAC.git
+    dest: /home/otsmanager/www
   become: true
   become_user: otsmanager
 
 - name: Install requirements with composer
-  composer: command=install working_dir=/home/otsmanager/www
+  composer:
+    command: install
+    working_dir: /home/otsmanager/www
   become: true
   become_user: otsmanager
 
-- name: Copy config.php
-  template: src=templates/config.php dest=/home/otsmanager/www/public_html/config.php
+- name: Configure config.php for DevAAC
+  template:
+    src: templates/config.php
+    dest: /home/otsmanager/www/public_html/config.php
   become: true
   become_user: otsmanager

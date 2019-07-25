@@ -1,29 +1,86 @@
 ---
 - name: Install debconf to set preseed info
-  apt: pkg=debconf-utils
+  apt:
+    pkg: debconf-utils
 
-- name: Set preseed info
-  shell: echo 'phpmyadmin phpmyadmin/dbconfig-install boolean true' | debconf-set-selections && echo 'phpmyadmin phpmyadmin/app-password-confirm password ' | debconf-set-selections && echo 'phpmyadmin phpmyadmin/mysql/admin-pass password {{randompass.stdout}}' | debconf-set-selections && echo 'phpmyadmin phpmyadmin/mysql/app-pass password ' | debconf-set-selections && echo 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect ' | debconf-set-selections
+- name: Set preseed info phpmyadmin/dbconfig-install
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/dbconfig-install
+    value: true
+    vtype: boolean
+
+- name: Set preseed info phpmyadmin/app-password-confirm
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/app-password-confirm
+    value: ''
+    vtype: password
+
+- name: Set preseed info phpmyadmin/mysql/admin-pass
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/mysql/admin-pass
+    value: "{{ randompass.stdout }}"
+    vtype: password
+
+- name: Set preseed info phpmyadmin/mysql/app-pass
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/mysql/app-pass
+    value: ''
+    vtype: password
+
+- name: Set preseed info phpmyadmin/reconfigure-webserver
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/reconfigure-webserver
+    value: ''
+    vtype: multiselect
 
 - name: Install phpmyadmin
-  apt: pkg=phpmyadmin state=latest
+  apt:
+    pkg: phpmyadmin
+    state: latest
 
 - name: Copy nginx configuration for phpmyadmin vhost (PHP 5)
-  template: src=templates/phpmyadmin-vhost.conf dest=/etc/nginx/sites-available/phpmyadmin
-  when: ansible_distribution_major_version|int < 16
+  template:
+    src: templates/phpmyadmin-vhost.conf
+    dest: /etc/nginx/sites-available/phpmyadmin
+  when: ansible_distribution_major_version|int == 15
   notify: restart nginx
 
 - name: Copy nginx configuration for phpmyadmin vhost (PHP 7.0)
-  template: src=templates/phpmyadmin-vhost-php7.conf dest=/etc/nginx/sites-available/phpmyadmin
-  when: ansible_distribution_major_version|int > 15
+  template:
+    src: templates/phpmyadmin-vhost-php7.conf
+    dest: /etc/nginx/sites-available/phpmyadmin
+  when: ansible_distribution_major_version|int == 16 or ansible_distribution_major_version|int == 17
+  notify: restart nginx
+
+- name: Copy nginx configuration for phpmyadmin vhost (PHP 7.2)
+  template:
+    src: templates/phpmyadmin-vhost-php72.conf
+    dest: /etc/nginx/sites-available/phpmyadmin
+  when: ansible_distribution_major_version|int == 18
   notify: restart nginx
 
 - name: Enable phpmyadmin vhost
-  file: src=/etc/nginx/sites-available/phpmyadmin dest=/etc/nginx/sites-enabled/phpmyadmin owner=root group=root state=link
+  file:
+    src: /etc/nginx/sites-available/phpmyadmin
+    dest: /etc/nginx/sites-enabled/phpmyadmin
+    owner: root
+    group: root
+    state: link
   notify: restart nginx
 
 # phpmyadmin depends on php5-mcrypt but it's not enabled automatically
 - name: Enable mcrypt for PHP5-FPM
-  file: src=../../mods-available/mcrypt.ini dest=/etc/php5/fpm/conf.d/20-mcrypt.ini owner=root group=root state=link force=true
+  file:
+    src: ../../mods-available/mcrypt.ini
+    dest: /etc/php5/fpm/conf.d/20-mcrypt.ini
+    owner: root
+    group: root
+    state: link
+    force: true
   notify: restart php5-fpm
   when: ansible_distribution_major_version|int < 16

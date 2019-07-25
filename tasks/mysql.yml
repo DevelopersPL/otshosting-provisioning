@@ -1,38 +1,63 @@
 ---
 - name: Install MySQL Server and backup packages
-  apt: pkg={{ item }} state=latest
-  with_items:
-   - mariadb-server
-   - python-mysqldb
-   - automysqlbackup
+  apt:
+    state: latest
+    pkg:
+      - mariadb-server
+      - python-mysqldb
+      - automysqlbackup
 
 - name: Change MySQL charset to prevent MySQL error 1709
-  template: src=templates/60-charset.cnf dest=/etc/mysql/mariadb.conf.d/60-charset.cnf
+  template:
+    src: templates/60-charset.cnf
+    dest: /etc/mysql/mariadb.conf.d/60-charset.cnf
   when: ansible_distribution_major_version|int > 15
   notify: restart mysql
 
 - name: Start Mysql Service
-  service: name=mysql state=restarted enabled=true
+  service:
+    name: mysql
+    state: restarted
+    enabled: true
 
 - name: Generate random MySQL root password
   command: openssl rand -base64 18
   register: randompass
 
 - name: Set MySQL otsmanager password (localhost)
-  mysql_user: name=otsmanager password={{randompass.stdout}} host=localhost priv=*.*:ALL,GRANT check_implicit_admin=yes
+  mysql_user:
+    name: otsmanager
+    password: "{{randompass.stdout}}"
+    host: localhost
+    priv: "*.*:ALL,GRANT"
+    check_implicit_admin: yes
 
 - name: Save MySQL otsmanager password
-  template: src=.my.cnf dest=/home/otsmanager/.my.cnf owner=otsmanager group=otsmanager mode=0600
+  template:
+    src: .my.cnf
+    dest: /home/otsmanager/.my.cnf
+    owner: otsmanager
+    group: otsmanager
+    mode: 0600
   
 - name: Set MySQL otsmanager password (%)
-  mysql_user: name=otsmanager password={{randompass.stdout}} host=% priv=*.*:ALL,GRANT check_implicit_admin=yes
+  mysql_user:
+    name: otsmanager
+    password: "{{randompass.stdout}}"
+    host: %
+    priv: "*.*:ALL,GRANT"
+    check_implicit_admin: yes
 
 - name: Check hostname
   command: hostname -f
   register: realhostname
 
 - name: Delete MySQL root accounts we don't want
-  mysql_user: name=root host={{item}} state=absent check_implicit_admin=yes
+  mysql_user:
+    name: root
+    host: "{{item}}"
+    state: absent
+    check_implicit_admin: yes
   with_items:
     - 127.0.0.1
     - ::1
@@ -40,13 +65,22 @@
     - '%'
 
 - name: Ensure anonymous MySQL users are not in the database
-  mysql_user: name="" host={{item}} state=absent check_implicit_admin=yes
+  mysql_user:
+    name: ""
+    host: "{{item}}"
+    state: absent
+    check_implicit_admin: yes
   with_items:
     - localhost
     - 127.0.0.1
 
 - name: Delete MySQL test database
-  mysql_db: name=test state=absent
+  mysql_db:
+    name: test
+    state: absent
 
 - name: Allow otsmanager to access automysqlbackup directory
-  file: path=/var/lib/automysqlbackup state=directory group=otsmanager
+  file:
+    path: /var/lib/automysqlbackup
+    state: directory
+    group: otsmanager

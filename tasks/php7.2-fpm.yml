@@ -14,53 +14,53 @@
 
 - name: Set php.ini display_errors
   lineinfile:
-    dest: /etc/php/7.0/fpm/php.ini
+    dest: /etc/php/7.2/fpm/php.ini
     line: "display_errors = On"
     regexp: "^display_errors ="
-  notify: restart php7.0-fpm
+  notify: restart php7.2-fpm
 
 - name: Set php.ini default_timezone
   lineinfile:
-    dest: /etc/php/7.0/fpm/php.ini
+    dest: /etc/php/7.2/fpm/php.ini
     line: "date.timezone = Europe/Warsaw"
     regexp: "^date.timezone ="
-  notify: restart php7.0-fpm
+  notify: restart php7.2-fpm
 
 - name: Set php.ini upload_max_filesize
   lineinfile:
-    dest: /etc/php/7.0/fpm/php.ini
+    dest: /etc/php/7.2/fpm/php.ini
     line: "upload_max_filesize = 64M"
     regexp: "^upload_max_filesize ="
-  notify: restart php7.0-fpm
+  notify: restart php7.2-fpm
 
 - name: Set php.ini post_max_size
   lineinfile:
-    dest: /etc/php/7.0/fpm/php.ini
+    dest: /etc/php/7.2/fpm/php.ini
     line: "post_max_size = 64M"
     regexp: "^post_max_size ="
-  notify: restart php7.0-fpm
+  notify: restart php7.2-fpm
 
-- name: Copy php7.0-fpm pool configuration
+- name: Copy php7.2-fpm pool configuration
   template:
     src: templates/php-fpm-pool.conf
-    dest: /etc/php/7.0/fpm/pool.d/otsmanager.conf
-  notify: restart php7.0-fpm
+    dest: /etc/php/7.2/fpm/pool.d/otsmanager.conf
+  notify: restart php7.2-fpm
 
-- name: Create /etc/systemd/system/php7.0-fpm.service.d
+- name: Create /etc/systemd/system/php7.2-fpm.service.d
   file:
-    dest: /etc/systemd/system/php7.0-fpm.service.d
+    dest: /etc/systemd/system/php7.2-fpm.service.d
     state: directory
 
-- name: Copy session-dir.conf unit override for PHP7.0-FPM
+- name: Copy session-dir.conf unit override for PHP7.2-FPM
   template:
     src: templates/systemd/php-session-dir.conf
-    dest: /etc/systemd/system/php7.0-fpm.service.d/session-dir.conf
+    dest: /etc/systemd/system/php7.2-fpm.service.d/session-dir.conf
   notify:
     - reload systemd
-    - restart php7.0-fpm
+    - restart php7.2-fpm
 
-- name: Start php7.0-fpm Service
+- name: Start php7.2-fpm Service
   service:
-    name: php7.0-fpm
+    name: php7.2-fpm
     state: started
     enabled: true

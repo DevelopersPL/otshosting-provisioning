@@ -1,38 +1,59 @@
 ---
 - name: Install php5-fpm
-  apt: pkg={{ item }} state=latest
-  with_items:
-    - php5-fpm
-    - php5-apcu
-    - php5-mysqlnd
-    - php5-json
-    - php5-cli
-    - php5-curl
-    - composer
+  apt:
+    state: latest
+    pkg:
+      - php5-fpm
+      - php5-apcu
+      - php5-mysqlnd
+      - php5-json
+      - php5-cli
+      - php5-curl
+      - composer
 
 - name: Set php.ini display_errors
-  lineinfile: dest=/etc/php5/fpm/php.ini line="display_errors = On" regexp="^display_errors =" state=present
+  lineinfile:
+    dest: /etc/php5/fpm/php.ini
+    line: "display_errors = On"
+    regexp: "^display_errors ="
   notify: restart php5-fpm
 
 - name: Set php.ini default_timezone
-  lineinfile: dest=/etc/php5/fpm/php.ini line="date.timezone = Europe/Warsaw" regexp="^date.timezone =" state=present
+  lineinfile:
+    dest: /etc/php5/fpm/php.ini
+    line: "date.timezone = Europe/Warsaw"
+    regexp: "^date.timezone ="
   notify: restart php5-fpm
 
 - name: Set php.ini upload_max_filesize
-  lineinfile: dest=/etc/php5/fpm/php.ini line="upload_max_filesize = 64M" regexp="^upload_max_filesize =" state=present
+  lineinfile:
+    dest: /etc/php5/fpm/php.ini
+    line: "upload_max_filesize = 64M"
+    regexp: "^upload_max_filesize ="
   notify: restart php5-fpm
 
 - name: Set php.ini post_max_size
-  lineinfile: dest=/etc/php5/fpm/php.ini line="post_max_size = 64M" regexp="^post_max_size =" state=present
+  lineinfile:
+    dest: /etc/php5/fpm/php.ini
+    line: "post_max_size = 64M"
+    regexp: "^post_max_size ="
   notify: restart php5-fpm
 
 - name: Copy php5-fpm configuration
-  template: src=templates/php-fpm-pool.conf dest=/etc/php5/fpm/pool.d/otsmanager.conf
+  template:
+    src: templates/php-fpm-pool.conf
+    dest: /etc/php5/fpm/pool.d/otsmanager.conf
   notify: restart php5-fpm
 
 - name: Set proper permissions on the socket
-  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf line="listen.owner = www-data" regexp="listen.owner =" state=present
+  lineinfile:
+    dest: /etc/php5/fpm/pool.d/www.conf
+    line: "listen.owner = www-data"
+    regexp: "listen.owner ="
   notify: restart php5-fpm
 
 - name: Start php5-fpm Service
-  service: name=php5-fpm state=started enabled=true
+  service:
+    name: php5-fpm
+    state: started
+    enabled: true

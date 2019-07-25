@@ -1,10 +1,17 @@
 ---
 - name: Install nginx
-  apt: pkg=nginx state=latest
+  apt:
+    pkg: nginx
+    state: latest
 
 - name: Copy nginx configuration for default vhost
-  template: src=templates/nginx-vhost.conf dest=/etc/nginx/sites-available/default
+  template:
+    src: templates/nginx-vhost.conf
+    dest: /etc/nginx/sites-available/default
   notify: restart nginx
 
 - name: Start nginx Service
-  service: name=nginx state=started enabled=true
+  service:
+    name: nginx
+    state: started
+    enabled: yes
