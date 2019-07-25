@@ -44,7 +44,7 @@
   mysql_user:
     name: otsmanager
     password: "{{randompass.stdout}}"
-    host: %
+    host: "%"
     priv: "*.*:ALL,GRANT"
     check_implicit_admin: yes
 
@@ -62,7 +62,7 @@
     - 127.0.0.1
     - ::1
     - realhostname.stdout
-    - '%'
+    - "%"
 
 - name: Ensure anonymous MySQL users are not in the database
   mysql_user:
