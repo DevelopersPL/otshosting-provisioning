@@ -70,7 +70,7 @@
   lineinfile:
     dest: /home/otsmanager/.bashrc
     line: . ~/.otsmanager
-    regexp: "^\. ~/\.otsmanager"
+    regexp: ^\. ~/\.otsmanager
 
 - name: Delete Ubuntu Cloud ad
   file:
