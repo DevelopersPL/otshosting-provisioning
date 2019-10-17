@@ -6,7 +6,7 @@
     state: directory
     owner: root
     group: systemd-journal
-    mode: 2755
+    mode: 02755
 
 - name: Create /etc/systemd/journald.conf.d
   file:
