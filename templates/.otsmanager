@@ -67,7 +67,7 @@ alias transfer=transfer
 expires=$(curl -m 1 -s https://spigu.net/api/otshosting/expires)
 
 echo "===================   MySQL   ==================="
-echo "    phpMyAdmin: http://$(GetLocalIP):3380"
+echo "    phpMyAdmin: https://$(GetLocalIP)/pma3380"
 echo "    Username: `cat ~/.my.cnf | sed -n -e '2{p;q}' | awk -F'=' '{ print $2 }'`"
 echo "    Password: `cat ~/.my.cnf | sed -n -e '3{p;q}' | awk -F'=' '{ print $2 }'`"
 echo -e '    You can execute \E[32;40mmysql'"\033[1m\033[0m commands without password."

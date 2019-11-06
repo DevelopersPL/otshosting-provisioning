@@ -91,11 +91,11 @@
     - include: tasks/phpmyadmin.yml
       tags:
         - default
-        - phpmyadmin
+        - phpMyAdmin
 
     - include: tasks/DevAAC.yml
       tags:
-        - devaac
+        - DevAAC
 
     - include: tasks/tfs.yml
       tags:
