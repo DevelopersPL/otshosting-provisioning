@@ -22,6 +22,7 @@
       - zip
       - p7zip
       - curl
+      - python3-certbot-nginx
  
 - name: Create otsmanager system user
   user:

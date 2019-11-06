@@ -14,17 +14,17 @@
         name: nginx
         state: restarted
 
-    - name: restart php5-fpm
-      service:
-        name: php5-fpm
-        state: restarted
-
     - name: restart php7.0-fpm
       service:
         name: php7.0-fpm
         state: restarted
 
     - name: restart php7.2-fpm
+      service:
+        name: php7.2-fpm
+        state: restarted
+
+    - name: restart php7.3-fpm
       service:
         name: php7.2-fpm
         state: restarted
@@ -36,52 +36,81 @@
 
   tasks:
     - name: Fail if not running on Ubuntu
-      fail: msg="This playbook only works on Ubuntu systems!"
+      fail:
+        msg: This playbook only works on Ubuntu systems!
       when: ansible_distribution != 'Ubuntu'
-      tags: default
+      tags: always
 
-    - name: Fail if Ubuntu older than 15.04
-      fail: msg="This playbook requires Ubuntu >= 15.04"
-      when: ansible_distribution_major_version|int < 15
-      tags: default
+    - name: Fail if Ubuntu older than 16.04
+      fail:
+        msg: This playbook requires Ubuntu >= 16.04
+      when: ansible_distribution_major_version|int < 16
+      tags: always
+
+    - name: Check available PHP package name/version
+      shell: apt-cache show php-fpm | grep Depends | head | awk '{print $2}'
+      register: php_version_query
+      changed_when: False
+      tags: always
+
+    - name: Register available PHP package name/version
+      set_fact:
+        # e.g.: php7.3-fpm
+        php_fpm_package_name: "{{ php_version_query.stdout }}"
+        # e.g.: php7.3
+        php_version: "{{ php_version_query.stdout.split('-')[0] }}"
+        # e.g.: 7.3
+        php_version_number: "{{ php_version_query.stdout.split('-')[0][3:] }}"
+      tags: always
 
     - include: tasks/systemd.yml
-      tags: default
+      tags:
+        - default
+        - systemd
 
     - include: tasks/general.yml
-      tags: default
+      tags:
+        - default
+        - general
 
     - include: tasks/mysql.yml
-      tags: default
+      tags:
+        - default
+        - mysql
 
-    - include: tasks/php5-fpm.yml
-      when: ansible_distribution_major_version|int == 15
-      tags: default
-
-    - include: tasks/php7.0-fpm.yml
-      when: ansible_distribution_major_version|int == 16 or ansible_distribution_major_version|int == 17
-      tags: default
-
-    - include: tasks/php7.2-fpm.yml
-      when: ansible_distribution_major_version|int >= 18
-      tags: default
+    - include: tasks/php-fpm.yml
+      tags:
+        - default
+        - php-fpm
 
     - include: tasks/nginx.yml
-      tags: default
+      tags:
+        - default
+        - nginx
 
     - include: tasks/phpmyadmin.yml
-      tags: phpMyAdmin
+      tags:
+        - default
+        - phpmyadmin
 
     - include: tasks/DevAAC.yml
-      tags: DevAAC
+      tags:
+        - devaac
 
     - include: tasks/tfs.yml
-      tags: tfs
+      tags:
+        - default
+        - tfs
 
     - include: tasks/tfs-old.yml
-      tags: tfs-old
+      tags:
+        - default
+        - tfs-old
 
     - include: tasks/general-last.yml
+      tags:
+        - default
+        - general
 
     - include: tasks/wine.yml
       tags: wine

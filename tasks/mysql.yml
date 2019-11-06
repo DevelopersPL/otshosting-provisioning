@@ -20,14 +20,24 @@
     state: restarted
     enabled: true
 
-- name: Generate random MySQL root password
+- name: Parse existing .my.cnf
+  shell: grep pass /home/otsmanager/.my.cnf | sed 's/password=//'
+  register: existingpass
+  args:
+    removes: /home/otsmanager/.my.cnf
+
+- name: Generate random MySQL otsmanager password
   command: openssl rand -base64 18
   register: randompass
+  when: existingpass|skipped
+
+- set_fact:
+    mysql_otsmanager_pass: "{{ randompass.stdout if existingpass|skipped else existingpass.stdout }}"
 
 - name: Set MySQL otsmanager password (localhost)
   mysql_user:
     name: otsmanager
-    password: "{{randompass.stdout}}"
+    password: "{{ mysql_otsmanager_pass }}"
     host: localhost
     priv: "*.*:ALL,GRANT"
     check_implicit_admin: yes
@@ -43,7 +53,7 @@
 - name: Set MySQL otsmanager password (%)
   mysql_user:
     name: otsmanager
-    password: "{{randompass.stdout}}"
+    password: "{{ mysql_otsmanager_pass }}"
     host: "%"
     priv: "*.*:ALL,GRANT"
     check_implicit_admin: yes

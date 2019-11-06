@@ -4,7 +4,7 @@ otshosting-provisioning
 =======================
 This is an Ansible playbook used to fully provision a Ubuntu machine for OTS Hosting.
 
-__It works with Ubuntu versions with systemd -> Ubuntu >= 15.04__
+__It works with Ubuntu versions with systemd -> Ubuntu >= 16.04__
 
 Make sure to have universe, multiverse and restricted repositories enabled
 
@@ -40,5 +40,4 @@ packages:
  
 runcmd:
   - 'ansible-pull -i localhost, -U https://github.com/DevelopersPL/otshosting-provisioning.git -d /srv/otshosting-provisioning --purge'
-
 ```
