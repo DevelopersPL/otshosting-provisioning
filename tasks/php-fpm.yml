@@ -1,0 +1,66 @@
+---
+- name: Install php-fpm
+  apt:
+    state: latest
+    pkg:
+      - php-fpm
+      - php-apcu
+      - php-mysqlnd
+      - php-curl
+      - php-xml
+      - php-mbstring
+      - php-gettext
+      - composer
+
+- name: Set php.ini display_errors
+  lineinfile:
+    dest: /etc/php/{{ php_version_number }}/fpm/php.ini
+    line: "display_errors = On"
+    regexp: "^display_errors ="
+  notify: restart php{{ php_version_number }}-fpm
+
+- name: Set php.ini default_timezone
+  lineinfile:
+    dest: /etc/php/{{ php_version_number }}/fpm/php.ini
+    line: "date.timezone = Europe/Warsaw"
+    regexp: "^date.timezone ="
+  notify: restart php{{ php_version_number }}-fpm
+
+- name: Set php.ini upload_max_filesize
+  lineinfile:
+    dest: /etc/php/{{ php_version_number }}/fpm/php.ini
+    line: "upload_max_filesize = 64M"
+    regexp: "^upload_max_filesize ="
+  notify: restart php{{ php_version_number }}-fpm
+
+- name: Set php.ini post_max_size
+  lineinfile:
+    dest: /etc/php/{{ php_version_number }}/fpm/php.ini
+    line: "post_max_size = 64M"
+    regexp: "^post_max_size ="
+  notify: restart php{{ php_version_number }}-fpm
+
+- name: Copy php{{ php_version_number }}-fpm pool configuration
+  template:
+    src: templates/php-fpm-pool.conf
+    dest: /etc/php/{{ php_version_number }}/fpm/pool.d/otsmanager.conf
+  notify: restart php{{ php_version_number }}-fpm
+
+- name: Create /etc/systemd/system/php{{ php_version_number }}-fpm.service.d
+  file:
+    dest: /etc/systemd/system/php{{ php_version_number }}-fpm.service.d
+    state: directory
+
+- name: Copy session-dir.conf unit override for PHP{{ php_version_number }}-FPM
+  template:
+    src: templates/systemd/php-session-dir.conf
+    dest: /etc/systemd/system/php{{ php_version_number }}-fpm.service.d/session-dir.conf
+  notify:
+    - reload systemd
+    - restart php{{ php_version_number }}-fpm
+
+- name: Start php{{ php_version_number }}-fpm Service
+  service:
+    name: php{{ php_version_number }}-fpm
+    state: started
+    enabled: true
