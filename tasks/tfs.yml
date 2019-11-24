@@ -23,14 +23,22 @@
   become: true
   become_user: otsmanager
 
-- name: Generate random MySQL password
+- name: Parse existing config.lua
+  shell: grep -s mysqlPass /home/otsmanager/forgottenserver/config.lua | sed -E 's/mysqlPass = "(.*)"/\1/g'
+  register: existingpass
+
+- name: Generate random MySQL forgottenserver password
   command: openssl rand -base64 18
   register: randompass
+  when: not existingpass.stdout
+
+- set_fact:
+    mysql_forgottenserver_pass: "{{ randompass.stdout if randompass is not skipped else existingpass.stdout }}"
 
 - name: Create database user for TFS
   mysql_user:
     name: forgottenserver
-    password: "{{randompass.stdout}}"
+    password: "{{mysql_forgottenserver_pass}}"
     priv: forgottenserver.*:ALL
     check_implicit_admin: yes
 
@@ -56,7 +64,7 @@
   lineinfile:
     dest: /home/otsmanager/forgottenserver/config.lua
     regexp: ^mysqlPass
-    line: 'mysqlPass = "{{randompass.stdout}}"'
+    line: 'mysqlPass = "{{mysql_forgottenserver_pass}}"'
 
 - name: Put server's IP address in config.lua
   lineinfile:

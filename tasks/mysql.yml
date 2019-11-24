@@ -21,18 +21,16 @@
     enabled: true
 
 - name: Parse existing .my.cnf
-  shell: grep pass /home/otsmanager/.my.cnf | sed 's/password=//'
+  shell: grep -s pass /home/otsmanager/.my.cnf | sed 's/password=//'
   register: existingpass
-  args:
-    removes: /home/otsmanager/.my.cnf
 
 - name: Generate random MySQL otsmanager password
   command: openssl rand -base64 18
   register: randompass
-  when: existingpass|skipped
+  when: not existingpass.stdout
 
 - set_fact:
-    mysql_otsmanager_pass: "{{ randompass.stdout if existingpass|skipped else existingpass.stdout }}"
+    mysql_otsmanager_pass: "{{ randompass.stdout if randompass is not skipped else existingpass.stdout }}"
 
 - name: Set MySQL otsmanager password (localhost)
   mysql_user:
@@ -77,12 +75,9 @@
 - name: Ensure anonymous MySQL users are not in the database
   mysql_user:
     name: ""
-    host: "{{item}}"
+    host_all: yes
     state: absent
     check_implicit_admin: yes
-  with_items:
-    - localhost
-    - 127.0.0.1
 
 - name: Delete MySQL test database
   mysql_db:
