@@ -42,3 +42,11 @@
   apt:
     pkg: phpmyadmin
     state: latest
+
+# https://stackoverflow.com/a/54454108/1447395
+- name: Patch bug in Ubuntu 18.04
+  replace:
+    dest: /usr/share/phpmyadmin/libraries/sql.lib.php
+    regexp: |
+      \|\| \(count\(\$analyzed_sql_results\['select_expr'] == 1\)$
+    replace: "            || ((count($analyzed_sql_results['select_expr']) == 1)\n"
