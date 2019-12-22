@@ -7,3 +7,11 @@
     pkg: wine
     state: latest
     update_cache: yes
+  when: ansible_distribution_major_version|int < 18
+
+- name: Install wine-development
+  apt:
+    pkg: wine
+    state: latest
+    update_cache: yes
+  when: ansible_distribution_major_version|int >= 18
