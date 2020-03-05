@@ -41,10 +41,10 @@
       when: ansible_distribution != 'Ubuntu'
       tags: always
 
-    - name: Fail if Ubuntu older than 16.04
+    - name: Fail if Ubuntu older than 18.04
       fail:
-        msg: This playbook requires Ubuntu >= 16.04
-      when: ansible_distribution_major_version|int < 16
+        msg: This playbook requires Ubuntu >= 18.04
+      when: ansible_distribution_major_version|int < 18
       tags: always
 
     - name: Check available PHP package name/version
