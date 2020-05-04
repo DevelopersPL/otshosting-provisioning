@@ -23,6 +23,8 @@
       - p7zip
       - curl
       - python3-certbot-nginx
+      - systemd-coredump
+      - gdb
  
 - name: Create otsmanager system user
   user:
@@ -39,25 +41,6 @@
     content: "SELECTED_EDITOR=\"/usr/bin/mcedit\""
     owner: otsmanager
     group: otsmanager
-  
-- name: Create systemd config directory for otsmanager
-  file:
-    path: /home/otsmanager/.config/systemd/user/
-    owner: otsmanager
-    group: otsmanager
-    mode: 0755
-    state: directory
-
-- name: Install systemd service for TFS for otsmanager
-  template:
-    src: templates/tfs.service
-    dest: /home/otsmanager/.config/systemd/user/
-    owner: otsmanager
-    group: otsmanager
-    mode: 0644
-
-- name: loginctl enable-linger otsmanager
-  command: loginctl enable-linger otsmanager
 
 - name: Install .otsmanager shell configuration
   template:

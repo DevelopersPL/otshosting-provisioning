@@ -1,13 +1,13 @@
 #!/bin/bash
-alias start='systemctl --user start'
-alias stop='systemctl --user stop'
-alias status='systemctl --user --no-pager status'
-alias restart='systemctl --user restart'
-alias enable='systemctl --user enable'
-alias disable='systemctl --user disable'
-alias log='journalctl --user --user-unit'
-alias follow='journalctl --user -f --user-unit'
-alias updatetfs='cd /home/otsmanager/forgottenserver && git pull && mkdir -p build && cd build && make clean && cmake .. && make && cd'
+alias start='sudo systemctl start'
+alias stop='sudo systemctl stop'
+alias status='sudo systemctl --no-pager status'
+alias restart='sudo systemctl restart'
+alias enable='sudo systemctl enable'
+alias disable='sudo systemctl disable'
+alias log='journalctl -u'
+alias follow='journalctl -f -u'
+alias updatetfs='cd /home/otsmanager/forgottenserver && git pull && rm -rf build && mkdir -p build && cd build && cmake .. && make && cd'
 alias duedate=`echo date -d $(curl -m 1 -s https://spigu.net/api/otshosting/expires)`
 function GetLocalIP()
 {
@@ -70,20 +70,20 @@ echo "===================   MySQL   ==================="
 echo "    phpMyAdmin: https://$(GetLocalIP)/pma3380"
 echo "    Username: `cat ~/.my.cnf | sed -n -e '2{p;q}' | awk -F'=' '{ print $2 }'`"
 echo "    Password: `cat ~/.my.cnf | sed -n -e '3{p;q}' | awk -F'=' '{ print $2 }'`"
-echo -e '    You can execute \E[32;40mmysql'"\033[1m\033[0m commands without password."
+echo -e '    You can execute \E[32;40mmysql'"\033[1m\033[0m commands without a password."
 echo "    Total size and location of MySQL backups: `du -hs /var/lib/automysqlbackup/`"
 echo "    Put your website files in /home/otsmanager/www/public_html"
 echo ""
 echo "===================   TFS commands   ===================" 
 echo " If you run TFS with the following commands, it will auto restart."
-echo -e '  Enable auto-start on boot:  \E[32;40menable tfs'"\033[1m\033[0m"
-echo -e ' Disable auto-start on boot:  \E[32;40mdisable tfs'"\033[1m\033[0m"
-echo -e '                  Start TFS:  \E[32;40mstart tfs'"\033[1m\033[0m"
-echo -e '                   Stop TFS:  \E[32;40mstop tfs'"\033[1m\033[0m"
-echo -e '                Restart TFS:  \E[32;40mrestart tfs'"\033[1m\033[0m"
-echo -e '        Check status of TFS:  \E[32;40mstatus tfs'"\033[1m\033[0m"
-echo -e '          Show full TFS log:  \E[32;40mlog tfs'"\033[1m\033[0m (q to exit)"
-echo -e '         Follow TFS console:  \E[32;40mfollow tfs'"\033[1m\033[0m (CTRL+C to stop)"
+echo -e '  Enable auto-start on boot:  \E[32;40msudo systemctl enable tfs'"\033[1m\033[0m"
+echo -e ' Disable auto-start on boot:  \E[32;40msudo systemctl disable tfs'"\033[1m\033[0m"
+echo -e '                  Start TFS:  \E[32;40msudo systemctl start tfs'"\033[1m\033[0m"
+echo -e '                   Stop TFS:  \E[32;40msudo systemctl stop tfs'"\033[1m\033[0m"
+echo -e '                Restart TFS:  \E[32;40msudo systemctl restart tfs'"\033[1m\033[0m"
+echo -e '        Check status of TFS:  \E[32;40msudo systemctl status tfs'"\033[1m\033[0m"
+echo -e '          Show full TFS log:  \E[32;40mjournalctl -u tfs'"\033[1m\033[0m (q to exit)"
+echo -e '         Follow TFS console:  \E[32;40mjournalctl -u tfs -f'"\033[1m\033[0m (CTRL+C to stop)"
 echo ""
 echo "===================  Useful commands   ==================="
 echo -e 'Update TFS to latest master:  \E[32;40mupdatetfs'"\033[1m\033[0m"

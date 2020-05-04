@@ -14,19 +14,9 @@
         name: nginx
         state: restarted
 
-    - name: restart php7.0-fpm
+    - name: restart php7.4-fpm
       service:
-        name: php7.0-fpm
-        state: restarted
-
-    - name: restart php7.2-fpm
-      service:
-        name: php7.2-fpm
-        state: restarted
-
-    - name: restart php7.3-fpm
-      service:
-        name: php7.3-fpm
+        name: php7.4-fpm
         state: restarted
 
     - name: restart mysql
@@ -41,10 +31,10 @@
       when: ansible_distribution != 'Ubuntu'
       tags: always
 
-    - name: Fail if Ubuntu older than 18.04
+    - name: Fail if Ubuntu older than 20.04
       fail:
-        msg: This playbook requires Ubuntu >= 18.04
-      when: ansible_distribution_major_version|int < 18
+        msg: This playbook requires Ubuntu >= 20.04
+      when: ansible_distribution_major_version|int < 20
       tags: always
 
     - name: Check available PHP package name/version
@@ -91,11 +81,7 @@
     - include: tasks/phpmyadmin.yml
       tags:
         - default
-        - phpMyAdmin
-
-    - include: tasks/DevAAC.yml
-      tags:
-        - DevAAC
+        - pma
 
     - include: tasks/tfs.yml
       tags:
@@ -104,8 +90,16 @@
 
     - include: tasks/tfs-old.yml
       tags:
-        - default
         - tfs-old
+
+    - include: tasks/znoteaac.yml
+      tags:
+        - default
+        - znote
+
+    - include: tasks/myaac.yml
+      tags:
+        - myaac
 
     - include: tasks/general-last.yml
       tags:

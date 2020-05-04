@@ -1,0 +1,25 @@
+---
+- name: Clone MyAAC from Github
+  git:
+    repo: https://github.com/slawkens/myaac.git
+    dest: /home/otsmanager/www/public_html
+  become: true
+  become_user: otsmanager
+
+- name: Configure config.lua path
+  lineinfile:
+    dest: /home/otsmanager/www/public_html/config.php
+    regexp: "'server_path' =>"
+    line: "	'server_path' => '/home/otsmanager/forgottenserver/',"
+
+- name: Configure friendly_urls
+  lineinfile:
+    dest: /home/otsmanager/www/public_html/config.php
+    regexp: "'friendly_urls' =>"
+    line: "	'friendly_urls' => true,"
+
+#- name: Import MyAAC database schema
+#  mysql_db:
+#    name: forgottenserver
+#    state: import
+#    target: /home/otsmanager/www/public_html/install/includes/schema.sql

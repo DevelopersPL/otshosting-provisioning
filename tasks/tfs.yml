@@ -6,15 +6,23 @@
       - git
       - cmake
       - build-essential
-      - libgmp3-dev
       - libmysqlclient-dev
       - libboost-system-dev
+      - libboost-date-time-dev
       - libboost-filesystem-dev
-      - liblua5.2-dev
-      - libpugixml-dev
-      - libluajit-5.1-dev
       - libboost-iostreams-dev
       - libcrypto++-dev
+      - liblua5.2-dev
+      - libluajit-5.1-dev
+      - libpugixml-dev
+
+- name: Install systemd service for TFS
+  template:
+    src: templates/{{item}}
+    dest: /etc/systemd/system/{{item}}
+  with_items:
+    - tfs.service
+    - tfs-gdb.service
 
 - name: Download latest TFS from git
   git:
@@ -59,6 +67,18 @@
     remote_src: yes
     owner: otsmanager
     group: otsmanager
+
+- name: Put mysqlHost for database in config.lua
+  lineinfile:
+    dest: /home/otsmanager/forgottenserver/config.lua
+    regexp: ^mysqlHost
+    line: 'mysqlHost = "localhost"'
+
+- name: Put mysqlSock for database in config.lua
+  lineinfile:
+    dest: /home/otsmanager/forgottenserver/config.lua
+    regexp: ^mysqlSock
+    line: 'mysqlSock = "/var/run/mysqld/mysqld.sock"'
 
 - name: Put password for database in config.lua
   lineinfile:

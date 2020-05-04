@@ -1,10 +1,10 @@
-You may be looking for our --> [DOCUMENTATION on wiki](https://github.com/DevelopersPL/otshosting-provisioning/wiki) <--
+[DOCUMENTATION on wiki](https://github.com/DevelopersPL/otshosting-provisioning/wiki)
 
 otshosting-provisioning
 =======================
 This is an Ansible playbook used to fully provision a Ubuntu machine for OTS Hosting.
 
-__It works with Ubuntu 16.04 or newer.__
+__Supported OS: Ubuntu 20.04__
 
 Make sure to have universe, multiverse and restricted repositories enabled.
 
@@ -12,11 +12,28 @@ A script to run on a standalone machine to provision it. If user "otsmanager" do
 ```bash
 #!/bin/bash -ex
 apt-get update
-apt-get install -y -q python-simplejson git-core ansible aptitude
-ansible-pull -i localhost, -U https://github.com/DevelopersPL/otshosting-provisioning.git -d /srv/otshosting-provisioning --purge
+apt install -y -q python-simplejson git-core ansible
+ansible-pull -i localhost, -U https://github.com/DevelopersPL/otshosting-provisioning.git -d /srv/otshosting-provisioning --purge -t default
 ```
 
-A cloud-init script to provision cloud instances with otshosting:
+Available tags:
+
+* systemd - enables persistent journald logging (default)
+* general - software & integration (default)
+* mysql - MariaDB SQL server (default)
+* php-fpm - PHP support for website (default)
+* nginx - web server (default)
+* pma - phpMyAdmin for easy administration (default)
+* tfs - TFS 1.X automatically compiled and installed (default)
+* tfs-old - packages ONLY to compile older versions
+* znote - ZnoteAAC automatically installed & configured (default)
+* myaac - only installation, without configuration
+* wine - wine packages to run exe (engines compiled for Windows)
+
+
+## cloud-init based provisioning
+
+A cloud-init script to provision a cloud instance using this playbook:
 ```
 #cloud-config
 users:
@@ -30,7 +47,6 @@ timezone: Europe/Warsaw
 
 package_upgrade: true
 package_update: true
-apt_mirror: http://mirror.ovh.net/ubuntu/
 
 packages:
  - python-simplejson
