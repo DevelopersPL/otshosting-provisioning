@@ -1,0 +1,43 @@
+---
+- name: Clone ZnoteAAC from Github
+  git:
+    repo: https://github.com/Znote/ZnoteAAC.git
+    dest: /home/otsmanager/www/public_html
+  become: true
+  become_user: otsmanager
+
+- name: Configure SQL username
+  lineinfile:
+    dest: /home/otsmanager/www/public_html/config.php
+    regexp: \$config\['sqlUser'\]
+    line: "        $config['sqlUser'] = 'forgottenserver';"
+
+- name: Configure SQL password
+  lineinfile:
+    dest: /home/otsmanager/www/public_html/config.php
+    regexp: \$config\['sqlPassword'\]
+    line: "        $config['sqlPassword'] = '{{mysql_forgottenserver_pass}}';"
+
+- name: Configure SQL database
+  lineinfile:
+    dest: /home/otsmanager/www/public_html/config.php
+    regexp: \$config\['sqlDatabase'\]
+    line: "        $config['sqlDatabase'] = 'forgottenserver';"
+
+- name: Configure SQL host
+  lineinfile:
+    dest: /home/otsmanager/www/public_html/config.php
+    regexp: \$config\['sqlHost'\]
+    line: "        $config['sqlHost'] = 'localhost';"
+
+- name: Configure server path
+  lineinfile:
+    dest: /home/otsmanager/www/public_html/config.php
+    regexp: \$config\['server_path'\]
+    line: "        $config['server_path'] = '/home/otsmanager/forgottenserver';"
+
+- name: Import ZnoteAAC database schema
+  mysql_db:
+    name: forgottenserver
+    state: import
+    target: /home/otsmanager/www/public_html/engine/database/znote_schema.sql

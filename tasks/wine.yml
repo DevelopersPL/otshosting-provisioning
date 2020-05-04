@@ -1,17 +1,6 @@
 ---
-- name: Add i386 architecture for wine
-  command: dpkg --add-architecture i386
-
-- name: Install wine
-  apt:
-    pkg: wine
-    state: latest
-    update_cache: yes
-  when: ansible_distribution_major_version|int < 18
-
 - name: Install wine-development
   apt:
     pkg: wine-development
     state: latest
     update_cache: yes
-  when: ansible_distribution_major_version|int >= 18

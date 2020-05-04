@@ -4,7 +4,7 @@
     state: latest
     pkg:
       - mariadb-server
-      - python-mysqldb
+      - python3-mysqldb
       - automysqlbackup
 
 - name: Change MySQL charset to prevent MySQL error 1709
@@ -13,19 +13,6 @@
     dest: /etc/mysql/mariadb.conf.d/60-charset.cnf
   when: ansible_distribution_major_version|int > 15
   notify: restart mysql
-
-- name: Create /etc/systemd/system/mariadb.service.d/
-  file:
-    path: /etc/systemd/system/mariadb.service.d/
-    state: directory
-
-- name: Create /etc/systemd/system/mariadb.service.d/user-wait.conf
-  copy:
-    dest: /etc/systemd/system/mariadb.service.d/user-wait.conf
-    content: |
-      [Unit]
-      Before=user@1000.service
-  notify: reload systemd
 
 - name: Start Mysql Service
   service:
