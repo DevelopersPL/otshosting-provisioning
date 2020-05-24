@@ -1,0 +1,11 @@
+---
+- name: Install proftpd
+  apt:
+    pkg: proftpd
+    state: latest
+
+- name: Start proftpd Service
+  service:
+    name: proftpd
+    state: started
+    enabled: yes
