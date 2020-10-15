@@ -11,3 +11,4 @@
       - liblua5.1-dev
       - libcrypto++-dev
       - libssl-dev
+      - libgmp-dev
