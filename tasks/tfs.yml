@@ -9,6 +9,7 @@
       - libgmp3-dev
       - libmysqlclient-dev
       - libboost-system-dev
+      - libboost-date-time-dev
       - libboost-filesystem-dev
       - liblua5.2-dev
       - libpugixml-dev
