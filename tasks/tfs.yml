@@ -15,6 +15,7 @@
       - liblua5.2-dev
       - libluajit-5.1-dev
       - libpugixml-dev
+      - libfmt-dev
 
 - name: Install systemd service for TFS
   template:
