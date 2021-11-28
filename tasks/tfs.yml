@@ -29,6 +29,7 @@
   git:
     repo: https://github.com/otland/forgottenserver.git
     dest: /home/otsmanager/forgottenserver
+    version: "1.4"
   become: true
   become_user: otsmanager
 
