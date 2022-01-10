@@ -13,6 +13,7 @@ User=otsmanager
 Group=otsmanager
 Restart=always
 LimitCORE=104857600
+LimitNOFILE=8192
 
 [Install]
 WantedBy=default.target
