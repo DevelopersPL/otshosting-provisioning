@@ -25,6 +25,7 @@
       - python3-certbot-nginx
       - systemd-coredump
       - gdb
+      - ncdu
  
 - name: Create otsmanager system user
   user:
