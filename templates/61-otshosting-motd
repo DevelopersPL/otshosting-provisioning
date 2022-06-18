@@ -2,5 +2,4 @@
 echo ""
 echo -e '             \E[37;42mWelcome to OTS Hosting preconfigured server!'"\033[1m\033[0m"
 echo ""
-echo "If you are a spigu.net customer, you can obtain premium help at https://spigu.net"
 echo "Community support available at https://otland.net/forums/support.16/"
