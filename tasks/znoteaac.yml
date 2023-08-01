@@ -41,3 +41,4 @@
     name: forgottenserver
     state: import
     target: /home/otsmanager/www/public_html/engine/database/znote_schema.sql
+    login_unix_socket: /var/run/mysqld/mysqld.sock
