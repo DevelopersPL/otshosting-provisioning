@@ -4,7 +4,7 @@ otshosting-provisioning
 =======================
 This is an Ansible playbook used to fully provision a Ubuntu machine for OTS Hosting.
 
-__Supported OS: Ubuntu 20.04__
+__Supported OS: Ubuntu 20.04 & 22.04__
 
 Make sure to have universe, multiverse and restricted repositories enabled.
 
@@ -12,7 +12,7 @@ A script to run on a standalone machine to provision it. If user "otsmanager" do
 ```bash
 #!/bin/bash -ex
 apt-get update
-apt install -y -q python-simplejson git-core ansible
+apt install -y -q python3-simplejson git-core ansible
 ansible-pull -i localhost, -U https://github.com/DevelopersPL/otshosting-provisioning.git -d /srv/otshosting-provisioning --purge -t default
 ```
 
@@ -40,7 +40,7 @@ users:
   - name: otsmanager
     gecos: OTS Manager
     lock-passwd: false
-    
+
 disable_root: true
 ssh_pwauth: True
 timezone: Europe/Warsaw
@@ -49,11 +49,11 @@ package_upgrade: true
 package_update: true
 
 packages:
- - python-simplejson
+ - python3-simplejson
  - git
  - ansible
  - aptitude
- 
+
 runcmd:
   - 'ansible-pull -i localhost, -U https://github.com/DevelopersPL/otshosting-provisioning.git -d /srv/otshosting-provisioning --purge'
 ```
