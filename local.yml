@@ -19,6 +19,11 @@
         name: php7.4-fpm
         state: restarted
 
+    - name: restart php8.1-fpm
+      service:
+        name: php8.1-fpm
+        state: restarted
+
     - name: restart mysql
       service:
         name: mysql
