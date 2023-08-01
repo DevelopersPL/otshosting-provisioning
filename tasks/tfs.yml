@@ -61,6 +61,7 @@
     name: forgottenserver
     state: import
     target: /home/otsmanager/forgottenserver/schema.sql
+    login_unix_socket: /var/run/mysqld/mysqld.sock
 
 - name: Copy config.lua.dist to config.lua if necessary
   copy:
