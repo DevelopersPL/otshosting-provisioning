@@ -10,5 +10,5 @@
 - name: Make public_html accessible to nginx
   file:
     path: /home/otsmanager
-    mode: o+r
+    mode: o+x
     state: directory
