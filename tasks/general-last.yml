@@ -6,3 +6,9 @@
     group: otsmanager
     mode: 0755
     state: directory
+
+- name: Make public_html accessible to nginx
+  file:
+    path: /home/otsmanager
+    mode: o+x
+    state: directory
