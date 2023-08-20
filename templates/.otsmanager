@@ -8,7 +8,7 @@ alias disable='sudo systemctl disable'
 alias log='journalctl -u'
 alias follow='journalctl -f -u'
 alias updatetfs='cd /home/otsmanager/forgottenserver && git pull && rm -rf build && mkdir -p build && cd build && cmake .. && make && cd'
-alias duedate=`echo date -d $(curl -m 1 -s https://spigu.net/api/otshosting/expires)`
+alias duedate=`echo date -d $(curl -m 1 -s https://otshosting.pl/api/otshosting/expires)`
 function GetLocalIP()
 {
    ip -4 -o addr show eth0 | egrep -o '([[:digit:]]{1,3}\.){3}[[:digit:]]{1,3}' | head -n 1
@@ -64,7 +64,7 @@ function transfer() {
 }
 alias transfer=transfer
 
-expires=$(curl -m 1 -s https://spigu.net/api/otshosting/expires)
+expires=$(curl -m 1 -s https://otshosting.pl/api/otshosting/expires)
 
 echo "===================   MySQL   ==================="
 echo "    phpMyAdmin: https://$(GetLocalIP)/pma3380"
