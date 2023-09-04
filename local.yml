@@ -88,6 +88,10 @@
         - default
         - pma
 
+    - include: tasks/phpmyadmin-sso.yml
+      tags:
+        - sso
+
     - include: tasks/tfs.yml
       tags:
         - default
