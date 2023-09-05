@@ -88,6 +88,11 @@
         - default
         - pma
 
+    - include: tasks/phpmyadmin-sso.yml
+      when: ansible_distribution_major_version|int >= 22
+      tags:
+        - sso
+
     - include: tasks/tfs.yml
       tags:
         - default

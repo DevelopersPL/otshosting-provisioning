@@ -1,0 +1,29 @@
+---
+- name: Give www-data access to MySQL
+  mysql_user:
+    name: www-data
+    host: localhost
+    priv: "*.*:ALL,GRANT"
+    plugin: unix_socket
+    plugin_hash_string: www-data
+    check_implicit_admin: yes
+
+- name: Download latest PMA SSO
+  git:
+    repo: https://gist.github.com/857dfc08aacb208bbade901ba7b9f9ba.git
+    dest: /usr/local/share/pmasso
+
+- name: Install dependencies
+  community.general.composer:
+    command: install
+    working_dir: /usr/local/share/pmasso
+  environment:
+    COMPOSER_HOME: /root/.config/composer
+
+- name: Activate PMA SSO
+  file:
+    src: /usr/local/share/pmasso/sso.php
+    dest: /etc/phpmyadmin/conf.d/sso.php
+    owner: root
+    group: root
+    state: link

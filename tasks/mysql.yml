@@ -47,7 +47,7 @@
     owner: otsmanager
     group: otsmanager
     mode: 0600
-  
+
 - name: Set MySQL otsmanager password (%)
   mysql_user:
     name: otsmanager
