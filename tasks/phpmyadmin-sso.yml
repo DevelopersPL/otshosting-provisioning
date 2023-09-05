@@ -17,6 +17,8 @@
   community.general.composer:
     command: install
     working_dir: /usr/local/share/pmasso
+  environment:
+    COMPOSER_HOME: /root/.config/composer
 
 - name: Activate PMA SSO
   file:
