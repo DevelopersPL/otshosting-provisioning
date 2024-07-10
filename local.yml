@@ -58,63 +58,63 @@
         php_version_number: "{{ php_version_query.stdout.split('-')[0][3:] }}"
       tags: always
 
-    - include: tasks/systemd.yml
+    - include_tasks: tasks/systemd.yml
       tags:
         - default
         - systemd
 
-    - include: tasks/general.yml
+    - include_tasks: tasks/general.yml
       tags:
         - default
         - general
 
-    - include: tasks/mysql.yml
+    - include_tasks: tasks/mysql.yml
       tags:
         - default
         - mysql
 
-    - include: tasks/php-fpm.yml
+    - include_tasks: tasks/php-fpm.yml
       tags:
         - default
         - php-fpm
 
-    - include: tasks/nginx.yml
+    - include_tasks: tasks/nginx.yml
       tags:
         - default
         - nginx
 
-    - include: tasks/phpmyadmin.yml
+    - include_tasks: tasks/phpmyadmin.yml
       tags:
         - default
         - pma
 
-    - include: tasks/phpmyadmin-sso.yml
+    - include_tasks: tasks/phpmyadmin-sso.yml
       when: ansible_distribution_major_version|int >= 22
       tags:
         - sso
 
-    - include: tasks/tfs.yml
+    - include_tasks: tasks/tfs.yml
       tags:
         - default
         - tfs
 
-    - include: tasks/tfs-old.yml
+    - include_tasks: tasks/tfs-old.yml
       tags:
         - tfs-old
 
-    - include: tasks/znoteaac.yml
+    - include_tasks: tasks/znoteaac.yml
       tags:
         - default
         - znote
 
-    - include: tasks/myaac.yml
+    - include_tasks: tasks/myaac.yml
       tags:
         - myaac
 
-    - include: tasks/general-last.yml
+    - include_tasks: tasks/general-last.yml
       tags:
         - default
         - general
 
-    - include: tasks/wine.yml
+    - include_tasks: tasks/wine.yml
       tags: wine
