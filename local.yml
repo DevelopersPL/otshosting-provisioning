@@ -24,6 +24,11 @@
         name: php8.1-fpm
         state: restarted
 
+    - name: restart php8.3-fpm
+      service:
+        name: php8.3-fpm
+        state: restarted
+
     - name: restart mysql
       service:
         name: mysql
@@ -58,63 +63,63 @@
         php_version_number: "{{ php_version_query.stdout.split('-')[0][3:] }}"
       tags: always
 
-    - include: tasks/systemd.yml
+    - import_tasks: tasks/systemd.yml
       tags:
         - default
         - systemd
 
-    - include: tasks/general.yml
+    - import_tasks: tasks/general.yml
       tags:
         - default
         - general
 
-    - include: tasks/mysql.yml
+    - import_tasks: tasks/mysql.yml
       tags:
         - default
         - mysql
 
-    - include: tasks/php-fpm.yml
+    - import_tasks: tasks/php-fpm.yml
       tags:
         - default
         - php-fpm
 
-    - include: tasks/nginx.yml
+    - import_tasks: tasks/nginx.yml
       tags:
         - default
         - nginx
 
-    - include: tasks/phpmyadmin.yml
+    - import_tasks: tasks/phpmyadmin.yml
       tags:
         - default
         - pma
 
-    - include: tasks/phpmyadmin-sso.yml
+    - import_tasks: tasks/phpmyadmin-sso.yml
       when: ansible_distribution_major_version|int >= 22
       tags:
         - sso
 
-    - include: tasks/tfs.yml
+    - import_tasks: tasks/tfs.yml
       tags:
         - default
         - tfs
 
-    - include: tasks/tfs-old.yml
+    - import_tasks: tasks/tfs-old.yml
       tags:
         - tfs-old
 
-    - include: tasks/znoteaac.yml
+    - import_tasks: tasks/znoteaac.yml
       tags:
         - default
         - znote
 
-    - include: tasks/myaac.yml
+    - import_tasks: tasks/myaac.yml
       tags:
         - myaac
 
-    - include: tasks/general-last.yml
+    - import_tasks: tasks/general-last.yml
       tags:
         - default
         - general
 
-    - include: tasks/wine.yml
+    - import_tasks: tasks/wine.yml
       tags: wine
