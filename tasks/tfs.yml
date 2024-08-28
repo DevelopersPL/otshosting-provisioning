@@ -11,6 +11,7 @@
       - libboost-date-time-dev
       - libboost-filesystem-dev
       - libboost-iostreams-dev
+      - libboost-locale-dev
       - libcrypto++-dev
       - liblua5.2-dev
       - libluajit-5.1-dev
