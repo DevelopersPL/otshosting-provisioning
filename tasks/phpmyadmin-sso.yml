@@ -19,6 +19,7 @@
     working_dir: /usr/local/share/pmasso
   environment:
     COMPOSER_HOME: /root/.config/composer
+    COMPOSER_ALLOW_SUPERUSER: 1
 
 - name: Activate PMA SSO
   file:
