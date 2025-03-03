@@ -4,7 +4,7 @@ otshosting-provisioning
 =======================
 This is an Ansible playbook used to fully provision a Ubuntu machine for OTS Hosting.
 
-__Supported OS: Ubuntu 20.04 & 22.04__
+__Supported OS: Ubuntu 20.04, 22.04, 24.04__
 
 Make sure to have universe, multiverse and restricted repositories enabled.
 
