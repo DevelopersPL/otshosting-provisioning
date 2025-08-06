@@ -1,4 +1,10 @@
 ---
+- name: Install MyAAC dependencies
+  apt:
+    name:
+      - npm
+    state: present
+
 - name: Clone MyAAC from Github
   git:
     repo: https://github.com/slawkens/myaac.git
@@ -6,20 +12,35 @@
   become: true
   become_user: otsmanager
 
-- name: Configure config.lua path
-  lineinfile:
-    dest: /home/otsmanager/www/public_html/config.php
-    regexp: "'server_path' =>"
-    line: "	'server_path' => '/home/otsmanager/forgottenserver/',"
+- name: Install composer dependencies
+  composer:
+    command: install
+    working_dir: /home/otsmanager/www/public_html
+    no_dev: true
+    prefer_dist: true
+  become: true
+  become_user: otsmanager
 
-- name: Configure friendly_urls
-  lineinfile:
-    dest: /home/otsmanager/www/public_html/config.php
-    regexp: "'friendly_urls' =>"
-    line: "	'friendly_urls' => true,"
+- name: Install npm dependencies
+  npm:
+    path: /home/otsmanager/www/public_html
+    production: true
+  become: true
+  become_user: otsmanager
 
-#- name: Import MyAAC database schema
-#  mysql_db:
-#    name: forgottenserver
-#    state: import
-#    target: /home/otsmanager/www/public_html/install/includes/schema.sql
+- name: Create config.local.php
+  copy:
+    dest: /home/otsmanager/www/public_html/config.local.php
+    content: |
+      <?php
+      $config['installed'] = true;
+      $config['env'] = 'prod';
+      $config['site_url'] = 'https://testing-server.ots.ovh';
+      $config['server_path'] = '/home/otsmanager/forgottenserver/';
+      $config['gzip_output'] = false;
+      $config['cache_engine'] = 'auto';
+      $config['cache_prefix'] = 'myaac_9rat8n32';
+      $config['database_auto_migrate'] = true;
+    owner: otsmanager
+    group: otsmanager
+    mode: '0644'

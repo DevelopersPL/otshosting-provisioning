@@ -109,11 +109,11 @@
 
     - import_tasks: tasks/znoteaac.yml
       tags:
-        - default
         - znote
 
     - import_tasks: tasks/myaac.yml
       tags:
+        - default
         - myaac
 
     - import_tasks: tasks/general-last.yml

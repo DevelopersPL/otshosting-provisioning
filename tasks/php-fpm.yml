@@ -18,24 +18,33 @@
     regexp: "^display_errors ="
   notify: restart php{{ php_version_number }}-fpm
 
+- name: Set php.ini error_log
+  lineinfile:
+    dest: /etc/php/{{ php_version_number }}/fpm/php.ini
+    line: "error_log = syslog"
+    regexp: "^error_log ="
+    insertafter: "^;error_log ="
+  notify: restart php{{ php_version_number }}-fpm
+
 - name: Set php.ini default_timezone
   lineinfile:
     dest: /etc/php/{{ php_version_number }}/fpm/php.ini
     line: "date.timezone = Europe/Warsaw"
     regexp: "^date.timezone ="
+    insertafter: "^;date.timezone ="
   notify: restart php{{ php_version_number }}-fpm
 
 - name: Set php.ini upload_max_filesize
   lineinfile:
     dest: /etc/php/{{ php_version_number }}/fpm/php.ini
-    line: "upload_max_filesize = 64M"
+    line: "upload_max_filesize = 100M"
     regexp: "^upload_max_filesize ="
   notify: restart php{{ php_version_number }}-fpm
 
 - name: Set php.ini post_max_size
   lineinfile:
     dest: /etc/php/{{ php_version_number }}/fpm/php.ini
-    line: "post_max_size = 64M"
+    line: "post_max_size = 100M"
     regexp: "^post_max_size ="
   notify: restart php{{ php_version_number }}-fpm
 
