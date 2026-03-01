@@ -53,7 +53,7 @@
 
 - name: Activate .otsmanager shell configuration file
   lineinfile:
-    dest: /home/otsmanager/.bashrc
+    dest: /home/otsmanager/.profile
     line: . ~/.otsmanager
     regexp: ^\. ~/\.otsmanager
 
