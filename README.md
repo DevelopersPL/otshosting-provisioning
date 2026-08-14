@@ -4,9 +4,13 @@ otshosting-provisioning
 =======================
 This is an Ansible playbook used to fully provision a Ubuntu machine for OTS Hosting.
 
-__Supported OS: Ubuntu 20.04, 22.04, 24.04__
+__Supported OS: Ubuntu 22.04, 24.04, 26.04__
 
 Make sure to have universe, multiverse and restricted repositories enabled.
+
+On Ubuntu 22.04 the `tfs` tag also enables the `ubuntu-toolchain-r/test` and
+`mhier/libboost-latest` PPAs: TFS needs GCC 13+ and Boost 1.75+, while jammy
+ships GCC 12 and Boost 1.74.
 
 A script to run on a standalone machine to provision it. If user "otsmanager" does not exist, it will be created with password: "otsmanager".
 ```bash

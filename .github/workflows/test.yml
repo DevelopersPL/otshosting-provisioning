@@ -1,0 +1,90 @@
+name: Test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  provision:
+    name: Ubuntu ${{ matrix.release }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+
+    strategy:
+      # Every release should report its own result - one broken release must
+      # not hide the state of the others.
+      fail-fast: false
+      matrix:
+        release: ['22.04', '24.04', '26.04']
+
+    env:
+      CONTAINER: otshosting
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build a systemd-enabled ubuntu:${{ matrix.release }} image
+        run: |
+          docker build --build-arg RELEASE=${{ matrix.release }} -t otshosting-test - <<'DOCKERFILE'
+          ARG RELEASE
+          FROM ubuntu:${RELEASE}
+
+          # systemd checks $container to know it is not on bare metal, and
+          # nothing in CI may stop to ask a debconf question.
+          ENV container=docker DEBIAN_FRONTEND=noninteractive
+
+          # A Docker base image is far more bare than a server install, so put
+          # back what the playbook assumes is already there: an init system,
+          # and iproute2 (without it fact gathering yields no
+          # ansible_default_ipv4, which tasks/tfs.yml writes into config.lua).
+          # The rest mirrors the bootstrap from README.md.
+          RUN apt-get update \
+           && apt-get install -y --no-install-recommends \
+                systemd systemd-sysv dbus iproute2 \
+                ansible python3-simplejson git sudo ca-certificates \
+           && rm -rf /var/lib/apt/lists/*
+
+          STOPSIGNAL SIGRTMIN+3
+          CMD ["/sbin/init"]
+          DOCKERFILE
+
+      - name: Boot it
+        run: |
+          docker run -d --name "$CONTAINER" \
+            --privileged --cgroupns=host \
+            -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
+            --tmpfs /run --tmpfs /run/lock \
+            otshosting-test /sbin/init
+
+          # systemd settles on "degraded" because a few units (udev, logind)
+          # cannot work in a container. That is expected - we only need it to
+          # finish booting so the playbook can talk to systemctl.
+          timeout 180 docker exec "$CONTAINER" systemctl is-system-running --wait || true
+          docker exec "$CONTAINER" systemctl --no-pager --failed || true
+
+      - name: Copy the playbook in
+        run: |
+          docker exec "$CONTAINER" mkdir -p /srv/otshosting-provisioning
+          docker cp "$GITHUB_WORKSPACE/." "$CONTAINER":/srv/otshosting-provisioning
+
+      - name: Run the playbook
+        run: |
+          # local.yml resolves the PHP version with apt-cache before anything
+          # runs apt update, so the lists have to be there already - as they are
+          # on a real cloud image, and as the README bootstrap ensures.
+          docker exec "$CONTAINER" apt-get update
+
+          docker exec -w /srv/otshosting-provisioning "$CONTAINER" \
+            ansible-playbook -i localhost, -c local local.yml -t default
+
+      - name: Collect logs on failure
+        if: failure()
+        run: |
+          docker exec "$CONTAINER" systemctl --no-pager --failed || true
+          docker exec "$CONTAINER" journalctl --no-pager -b -n 300 || true

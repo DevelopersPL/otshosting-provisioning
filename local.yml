@@ -14,11 +14,6 @@
         name: nginx
         state: restarted
 
-    - name: restart php7.4-fpm
-      service:
-        name: php7.4-fpm
-        state: restarted
-
     - name: restart php8.1-fpm
       service:
         name: php8.1-fpm
@@ -27,6 +22,16 @@
     - name: restart php8.3-fpm
       service:
         name: php8.3-fpm
+        state: restarted
+
+    - name: restart php8.4-fpm
+      service:
+        name: php8.4-fpm
+        state: restarted
+
+    - name: restart php8.5-fpm
+      service:
+        name: php8.5-fpm
         state: restarted
 
     - name: restart mysql
@@ -41,10 +46,10 @@
       when: ansible_distribution != 'Ubuntu'
       tags: always
 
-    - name: Fail if Ubuntu older than 20.04
+    - name: Fail if Ubuntu older than 22.04
       fail:
-        msg: This playbook requires Ubuntu >= 20.04
-      when: ansible_distribution_major_version|int < 20
+        msg: This playbook requires Ubuntu >= 22.04
+      when: ansible_distribution_major_version|int < 22
       tags: always
 
     - name: Check available PHP package name/version

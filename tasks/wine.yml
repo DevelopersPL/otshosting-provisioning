@@ -1,6 +1,16 @@
 ---
+# Ubuntu dropped the wine-development package after 22.04 - newer releases
+# ship a recent Wine in the regular "wine" package instead.
 - name: Install wine-development
   apt:
     pkg: wine-development
     state: latest
     update_cache: yes
+  when: ansible_distribution_major_version|int < 24
+
+- name: Install wine
+  apt:
+    pkg: wine
+    state: latest
+    update_cache: yes
+  when: ansible_distribution_major_version|int >= 24
