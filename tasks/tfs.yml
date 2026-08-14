@@ -1,4 +1,23 @@
 ---
+# TFS master needs std::format (GCC 13+) and Boost.JSON (Boost 1.75+). Jammy
+# ships GCC 12 and Boost 1.74, and upstream's -DHTTP=OFF is not a way out - it
+# configures but fails to link, because game.cpp and otserv.cpp call
+# tfs::http::start/stop unguarded. So on 22.04 both come from PPAs instead.
+- name: 'Compatibility: Install add-apt-repository (Ubuntu 22.04)'
+  apt:
+    pkg: software-properties-common
+    state: latest
+  when: ansible_distribution_major_version|int < 24
+
+- name: 'Compatibility: Add newer toolchain and Boost PPAs (Ubuntu 22.04)'
+  apt_repository:
+    repo: "{{ item }}"
+    update_cache: yes
+  with_items:
+    - ppa:ubuntu-toolchain-r/test
+    - ppa:mhier/libboost-latest
+  when: ansible_distribution_major_version|int < 24
+
 - name: Install packages needed to compile TFS
   apt:
     state: latest
@@ -7,17 +26,31 @@
       - cmake
       - build-essential
       - libmysqlclient-dev
+      - libcrypto++-dev
+      - liblua5.2-dev
+      - libluajit-5.1-dev
+      - libpugixml-dev
+      - libfmt-dev
+
+- name: 'Compatibility: Install PPA toolchain and Boost for TFS (Ubuntu 22.04)'
+  apt:
+    state: latest
+    pkg:
+      - g++-13
+      - libboost1.83-all-dev
+  when: ansible_distribution_major_version|int < 24
+
+- name: Install Boost for TFS
+  apt:
+    state: latest
+    pkg:
       - libboost-system-dev
       - libboost-date-time-dev
       - libboost-filesystem-dev
       - libboost-iostreams-dev
       - libboost-locale-dev
       - libboost-json-dev
-      - libcrypto++-dev
-      - liblua5.2-dev
-      - libluajit-5.1-dev
-      - libpugixml-dev
-      - libfmt-dev
+  when: ansible_distribution_major_version|int >= 24
 
 - name: Install systemd service for TFS
   template:
@@ -107,8 +140,45 @@
   become: true
   become_user: otsmanager
 
+# Boost 1.90 (Ubuntu 26.04) dropped the boost_system CMake package that TFS
+# still asks for. Supply a stand-in instead of patching the checkout: a dirty
+# working tree would make the git task above fail on every later run.
+- name: Create CMake package directory for the Boost.System stand-in
+  file:
+    path: /usr/local/lib/tfs-cmake/boost_system
+    state: directory
+    mode: 0755
+  when: ansible_distribution_major_version|int >= 26
+
+- name: Install the Boost.System CMake stand-in
+  template:
+    src: templates/cmake/{{ item }}
+    dest: /usr/local/lib/tfs-cmake/boost_system/{{ item }}
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - boost_system-config.cmake
+    - boost_system-config-version.cmake
+  when: ansible_distribution_major_version|int >= 26
+
+# Pointing cmake at a different compiler is a hard error against an existing
+# cache, and hosts provisioned before the PPA switch were configured with the
+# distro g++. Drop the cache in that case so the reconfigure can proceed.
+- name: 'Compatibility: Drop a CMake cache built with another compiler (Ubuntu 22.04)'
+  shell: grep -q '^CMAKE_CXX_COMPILER:.*g++-13$' CMakeCache.txt || rm -f CMakeCache.txt
+  args:
+    chdir: /home/otsmanager/forgottenserver/build
+    removes: /home/otsmanager/forgottenserver/build/CMakeCache.txt
+  when: ansible_distribution_major_version|int < 24
+  tags: compile
+
 - name: Cmake forgottenserver source
-  command: cmake ..
+  command: cmake .. {{ tfs_cmake_args | join(' ') }}
+  vars:
+    tfs_cmake_args: "{{
+      (['-DCMAKE_CXX_COMPILER=g++-13'] if ansible_distribution_major_version|int < 24 else []) +
+      (['-Dboost_system_DIR=/usr/local/lib/tfs-cmake/boost_system'] if ansible_distribution_major_version|int >= 26 else []) }}"
   args:
     chdir: /home/otsmanager/forgottenserver/build
   tags: compile
